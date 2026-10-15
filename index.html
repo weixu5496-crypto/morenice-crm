@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#14243a">
-<title>Morenice CRM | Supply Chain</title>
-<style>
+\<!DOCTYPE html>
+\<html lang="zh-CN">
+\<head>
+\<meta charset="UTF-8">
+\<meta name="viewport" content="width=device-width,initial-scale=1">
+\<meta name="theme-color" content="#14243a">
+\<title>Morenice CRM | Supply Chain\</title>
+\<style>
 :root{--navy:#14243a;--blue:#2864dc;--bg:#f4f6fa;--line:#e5e9f0;--text:#202b3c;--muted:#778397;--green:#16845c;--red:#c74747}
-*{box-sizing:border-box}
+\*{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
@@ -20,8 +20,10 @@ button{cursor:pointer}
 .nav button.active,.nav button:hover{background:#293c57;color:white}
 .side-note{font-size:11px;color:#9daec4;line-height:1.8;padding:20px 12px}
 main{flex:1;min-width:0}
-.topbar{height:66px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.topbar{height:66px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:10px}
 .topbar strong{font-size:16px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.lang-select{border:1px solid var(--line);background:white;border-radius:7px;padding:6px 10px;font-size:12px;color:var(--text)}
 .content{padding:27px;max-width:1450px;margin:auto}
 h1{font-size:25px;margin:0 0 8px}
 h2{font-size:17px;margin:0}
@@ -64,383 +66,721 @@ dialog::backdrop{background:#14243a80}
 .modal-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
 .modal-body{padding:22px;overflow-y:auto;max-height:70vh}
 .modal-foot{padding:16px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+/\* RTL 阿拉伯语适配 \*/
+[dir="rtl"] .nav button{text-align:right}
+[dir="rtl"] th,[dir="rtl"] td{text-align:right}
+[dir="rtl"] .heading{flex-direction:row-reverse}
+[dir="rtl"] .side-note{text-align:right}
+[dir="rtl"] .brand{text-align:right}
+[dir="rtl"] .modal-foot{flex-direction:row-reverse}
+[dir="rtl"] .panel-head{flex-direction:row-reverse}
 @media(max-width:850px){
- .sidebar{display:none}.app{display:block}.topbar{padding:0 17px}
- .content{padding:19px 14px 85px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
- .stat{padding:15px}.stat-value{font-size:25px}.two-col{grid-template-columns:1fr}
- .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--line);z-index:5;overflow-x:auto;padding:5px}
- .mobile-nav button{flex:1;min-width:66px;border:0;background:white;padding:9px 4px;font-size:11px;color:#637087}
- .mobile-nav button.active{color:var(--blue);font-weight:700}
- .form-grid{grid-template-columns:1fr}.full{grid-column:auto}
- .search{max-width:100%;width:100%}.heading{align-items:flex-start}
+&#x20;.sidebar{display:none}.app{display:block}.topbar{padding:0 14px}
+&#x20;.content{padding:19px 14px 85px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+&#x20;.stat{padding:15px}.stat-value{font-size:25px}.two-col{grid-template-columns:1fr}
+&#x20;.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--line);z-index:5;overflow-x:auto;padding:5px}
+&#x20;.mobile-nav button{flex:1;min-width:66px;border:0;background:white;padding:9px 4px;font-size:11px;color:#637087}
+&#x20;.mobile-nav button.active{color:var(--blue);font-weight:700}
+&#x20;.form-grid{grid-template-columns:1fr}.full{grid-column:auto}
+&#x20;.search{max-width:100%;width:100%}.heading{align-items:flex-start}
 }
-</style>
-</head>
-<body>
-<div class="app">
-<aside class="sidebar">
-  <div class="brand">MORENICE<small>SUPPLY CHAIN CRM</small></div>
-  <div class="nav" id="sideNav"></div>
-  <div class="side-note">个人测试版<br>数据保存在当前浏览器<br>请勿录入真实商业机密</div>
-</aside>
-<main>
-<header class="topbar">
-  <strong id="topTitle">工作台 Dashboard</strong>
-  <span class="muted">Morenice · CRM Test</span>
-</header>
-<div class="content" id="content"></div>
-<footer>Morenice Supply Chain Management Co., Ltd. · Private Test Workspace</footer>
-</main>
-</div>
-<nav class="mobile-nav" id="mobileNav"></nav>
-<dialog id="modal">
-  <form id="editForm">
-    <div class="modal-head"><strong id="modalTitle">新增记录</strong><button type="button" class="btn small" onclick="closeModal()">关闭</button></div>
-    <div class="modal-body" id="modalBody"></div>
-    <div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">保存记录</button></div>
-  </form>
-</dialog>
-<script>
+\</style>
+\</head>
+\<body>
+\<div class="app">
+\<aside class="sidebar">
+&#x20; \<div class="brand">MORENICE\<small>SUPPLY CHAIN CRM\</small>\</div>
+&#x20; \<div class="nav" id="sideNav">\</div>
+&#x20; \<div class="side-note" id="sideNote">\</div>
+\</aside>
+\<main>
+\<header class="topbar">
+&#x20; \<strong id="topTitle">\</strong>
+&#x20; \<div class="topbar-right">
+&#x20;   \<span class="muted">Morenice · CRM Test\</span>
+&#x20;   \<select class="lang-select" id="langSelect" onchange="changeLang(this.value)">
+&#x20;     \<option value="zh">中文\</option>
+&#x20;     \<option value="en">English\</option>
+&#x20;     \<option value="es">Español\</option>
+&#x20;     \<option value="ar">العربية\</option>
+&#x20;   \</select>
+&#x20; \</div>
+\</header>
+\<div class="content" id="content">\</div>
+\<footer id="footerText">\</footer>
+\</main>
+\</div>
+\<nav class="mobile-nav" id="mobileNav">\</nav>
+\<dialog id="modal">
+&#x20; \<form id="editForm">
+&#x20;   \<div class="modal-head">\<strong id="modalTitle">\</strong>\<button type="button" class="btn small" onclick="closeModal()" id="modalCloseBtn">\</button>\</div>
+&#x20;   \<div class="modal-body" id="modalBody">\</div>
+&#x20;   \<div class="modal-foot">\<button type="button" class="btn" onclick="closeModal()" id="modalCancelBtn">\</button>\<button class="btn primary" type="submit" id="modalSaveBtn">\</button>\</div>
+&#x20; \</form>
+\</dialog>
+\<script>
 "use strict";
 
+/\* ================= 邮件发送配置 ================= \*/
+const MAIL_CONFIG = {
+&#x20; enabled: true,                                        // 想关闭邮件发送改成 false
+&#x20; web3formsKey: "7a2956c6-0812-4477-9295-1812f05ce39c
+};
+
+/\* ================= 多语言字典 ================= \*/
+const I18N = {
+zh:{
+&#x20;"nav.dashboard":"工作台","nav.leads":"客户询盘","nav.followups":"跟进提醒","nav.quotes":"物流报价","nav.orders":"订单利润","nav.email":"多语言邮件助手","nav.settings":"数据管理",
+&#x20;"side.note":"个人测试版\<br>数据保存在当前浏览器\<br>请勿录入真实商业机密",
+&#x20;"footer":"Morenice Supply Chain Management Co., Ltd. · Private Test Workspace",
+&#x20;"common.edit":"编辑","common.delete":"删除","common.save":"保存记录","common.cancel":"取消","common.close":"关闭",
+&#x20;"common.empty":"暂无记录，点击新增开始使用","common.notset":"未设置","common.notfilled":"未填写",
+&#x20;"common.deleteConfirm":"确定删除这条记录？此操作不可撤销。",
+&#x20;"dash.title":"工作台 Dashboard","dash.desc":"欢迎使用 Morenice CRM 个人测试版",
+&#x20;"dash.totalCustomers":"客户总数","dash.totalCustomersDesc":"全部客户档案",
+&#x20;"dash.activeLeads":"跟进中询盘","dash.activeLeadsDesc":"尚未成交或关闭",
+&#x20;"dash.pendingFollowups":"待处理跟进","dash.pendingFollowupsDesc":"所有未完成事项",
+&#x20;"dash.grossProfit":"累计订单毛利","dash.grossProfitDesc":"订单收入减去成本",
+&#x20;"dash.todayFollowups":"今日及逾期跟进","dash.noTodayFollowups":"暂无今日或逾期跟进",
+&#x20;"dash.recentLeads":"最近客户询盘","dash.noLeads":"还没有客户，添加第一条询盘吧。",
+&#x20;"dash.overview":"业务概览","dash.orderRevenue":"订单收入","dash.orderProfit":"订单毛利","dash.customerInquiries":"客户询盘","dash.logisticsQuotes":"物流报价",
+&#x20;"dash.tip":"建议每天查看待跟进事项，及时更新客户状态、报价和订单成本。",
+&#x20;"leads.title":"客户询盘","leads.desc":"管理客户资料、物流需求和销售机会","leads.addBtn":"新增客户","leads.panelTitle":"客户档案",
+&#x20;"leads.searchPlaceholder":"搜索客户、公司、国家、货物...",
+&#x20;"leads.col.customer":"客户 / 公司","leads.col.country":"国家 / 邮箱","leads.col.product":"货物需求","leads.col.route":"运输路线","leads.col.status":"状态","leads.col.nextDate":"下次跟进","leads.col.actions":"操作",
+&#x20;"followups.title":"跟进提醒","followups.desc":"记录邮件、WhatsApp、电话和下一次联系时间","followups.addBtn":"新增跟进","followups.panelTitle":"跟进任务",
+&#x20;"followups.searchPlaceholder":"搜索客户或跟进内容...",
+&#x20;"followups.col.customer":"客户","followups.col.note":"跟进内容","followups.col.date":"计划日期","followups.col.status":"状态","followups.col.actions":"操作",
+&#x20;"followups.markDone":"标记完成",
+&#x20;"quotes.title":"物流报价","quotes.desc":"记录运输方案、成本参考和客户报价","quotes.addBtn":"新增报价","quotes.panelTitle":"报价记录",
+&#x20;"quotes.searchPlaceholder":"搜索客户、路线或运输方式...",
+&#x20;"quotes.col.customer":"客户","quotes.col.route":"运输路线","quotes.col.method":"运输方式","quotes.col.amount":"报价金额","quotes.col.valid":"有效期","quotes.col.status":"状态","quotes.col.actions":"操作",
+&#x20;"orders.title":"订单利润分析","orders.desc":"录入订单收入与成本，自动核算毛利","orders.addBtn":"新增订单",
+&#x20;"orders.stat.count":"订单数量","orders.stat.countDesc":"全部订单",
+&#x20;"orders.stat.revenue":"总收入","orders.stat.revenueDesc":"按订单币种汇总，仅适用于币种一致的情况",
+&#x20;"orders.stat.cost":"总成本","orders.stat.costDesc":"按订单币种汇总",
+&#x20;"orders.stat.profit":"毛利","orders.stat.profitDesc":"收入减去成本",
+&#x20;"orders.panelTitle":"订单明细","orders.searchPlaceholder":"搜索客户或路线...",
+&#x20;"orders.col.customer":"客户","orders.col.route":"运输路线","orders.col.revenue":"收入","orders.col.cost":"成本","orders.col.profit":"毛利","orders.col.margin":"毛利率","orders.col.status":"状态","orders.col.actions":"操作",
+&#x20;"orders.note":"注意：如果订单使用不同币种，请先统一换算为同一币种再比较总收入和总毛利。本测试版不自动换汇，也不包含税务、应收应付或实际财务账簿功能。",
+&#x20;"email.title":"多语言邮件助手","email.desc":"选择目标语言，生成商务邮件草稿；支持中英西阿四种语言",
+&#x20;"email.customerName":"客户姓名 (Name)","email.customerNamePlaceholder":"例如 Maria",
+&#x20;"email.country":"客户国家 (Country) - 可辅助判断语言",
+&#x20;"email.countryOption.en":"美国 / 英国 / 其他英语国家",
+&#x20;"email.countryOption.es":"西班牙 / 拉美国家",
+&#x20;"email.countryOption.ar":"中东 / 阿拉伯国家",
+&#x20;"email.countryOption.zh":"中国 / 华人客户",
+&#x20;"email.targetLang":"目标语言 (Target Language)","email.scenario":"邮件场景",
+&#x20;"email.scenario.inquiry":"回复新询盘","email.scenario.quote":"发送物流报价","email.scenario.followup":"跟进客户","email.scenario.shipment":"更新运输进度","email.scenario.documents":"确认文件资料",
+&#x20;"email.details":"货物 / 路线 / 关键信息 (中文输入即可)","email.detailsPlaceholder":"例如：6家供应商货物已收齐，正在集货，预计后天装柜。",
+&#x20;"email.generate":"生成目标语言草稿 + 中文核对版",
+&#x20;"email.draftTitle":"邮件草稿 (多语言对照)","email.copy":"复制邮件",
+&#x20;"email.draftPlaceholder":"生成的邮件会显示在这里，你可以继续编辑。",
+&#x20;"email.tip":"提示：由于是纯前端页面，关键信息不会自动机翻，请手动核对并微调草稿中的具体数字和地名。",
+&#x20;"settings.title":"数据管理","settings.desc":"备份、恢复或清空当前浏览器中的测试数据",
+&#x20;"settings.backupTitle":"数据备份","settings.backupDesc":"建议在更换手机、清理浏览器数据或修改代码前导出备份。",
+&#x20;"settings.exportJson":"导出 JSON 备份","settings.exportCsv":"导出客户 CSV","settings.importJson":"导入 JSON 备份",
+&#x20;"settings.statusTitle":"数据状态",
+&#x20;"settings.statusLeads":"客户","settings.statusFollowups":"跟进","settings.statusQuotes":"报价","settings.statusOrders":"订单",
+&#x20;"settings.statusNote":"这些数据保存在当前浏览器的 localStorage 中。GitHub Pages 不会自动同步不同设备之间的数据。",
+&#x20;"settings.clear":"清空所有测试数据",
+&#x20;"modal.new":"新增","modal.edit":"编辑",
+&#x20;"field.name":"客户姓名","field.company":"公司名称","field.country":"国家 / 地区","field.email":"邮箱","field.phone":"WhatsApp / 电话",
+&#x20;"field.product":"货物类型","field.route":"运输路线","field.method":"运输方式 / 条款","field.volume":"体积 CBM","field.status":"询盘状态","field.nextDate":"下次跟进日期","field.notes":"需求与备注",
+&#x20;"field.customer":"客户姓名 / 公司","field.date":"计划跟进日期","field.note":"跟进内容","field.taskStatus":"任务状态",
+&#x20;"field.quoteAmount":"客户报价金额","field.currency":"币种","field.valid":"报价有效期","field.quoteStatus":"报价状态","field.quoteNotes":"费用构成 / 备注",
+&#x20;"field.orderRevenue":"订单收入","field.orderCost":"订单总成本","field.orderStatus":"订单状态","field.orderNotes":"订单备注",
+&#x20;"status.新询盘":"新询盘","status.已联系":"已联系","status.报价中":"报价中","status.等待回复":"等待回复","status.已成交":"已成交","status.已关闭":"已关闭",
+&#x20;"status.待跟进":"待跟进","status.已完成":"已完成","status.已取消":"已取消",
+&#x20;"status.草稿":"草稿","status.已发送":"已发送","status.待确认":"待确认","status.已接受":"已接受","status.已失效":"已失效",
+&#x20;"status.待出运":"待出运","status.运输中":"运输中",
+&#x20;"alert.saveFailed":"保存失败：浏览器存储空间可能不足，请先导出数据。",
+&#x20;"alert.copied":"已复制邮件草稿","alert.copyFailed":"复制失败，请长按文本手动复制","alert.copyNoContent":"请先生成或填写邮件草稿。",
+&#x20;"alert.importConfirm":"导入将替换当前所有数据，建议先导出备份。继续吗？","alert.importSuccess":"数据导入成功","alert.importFailed":"导入失败：文件格式不正确。",
+&#x20;"alert.clear1":"确定清空全部客户、跟进、报价和订单数据吗？","alert.clear2":"请再次确认。建议先导出 JSON 备份。",
+&#x20;"alert.sendSuccess":"询盘已保存，并已发送到后台邮箱 ✅","alert.sendFailed":"询盘已保存，但邮件发送失败，请检查 Access Key 或网络 ⚠️",
+&#x20;"alert.sendDisabled":"询盘已保存（邮件发送未开启）"
+},
+en:{
+&#x20;"nav.dashboard":"Dashboard","nav.leads":"Leads","nav.followups":"Follow-ups","nav.quotes":"Quotes","nav.orders":"Orders","nav.email":"Email Assistant","nav.settings":"Data",
+&#x20;"side.note":"Private test version\<br>Data is stored in this browser\<br>Do not enter real business secrets",
+&#x20;"footer":"Morenice Supply Chain Management Co., Ltd. · Private Test Workspace",
+&#x20;"common.edit":"Edit","common.delete":"Delete","common.save":"Save","common.cancel":"Cancel","common.close":"Close",
+&#x20;"common.empty":"No records yet. Click Add to start.","common.notset":"Not set","common.notfilled":"Not filled",
+&#x20;"common.deleteConfirm":"Delete this record? This cannot be undone.",
+&#x20;"dash.title":"Dashboard","dash.desc":"Welcome to Morenice CRM private test version",
+&#x20;"dash.totalCustomers":"Total Customers","dash.totalCustomersDesc":"All customer records",
+&#x20;"dash.activeLeads":"Active Leads","dash.activeLeadsDesc":"Not won or closed yet",
+&#x20;"dash.pendingFollowups":"Pending Follow-ups","dash.pendingFollowupsDesc":"All unfinished tasks",
+&#x20;"dash.grossProfit":"Total Gross Profit","dash.grossProfitDesc":"Order revenue minus cost",
+&#x20;"dash.todayFollowups":"Today & Overdue Follow-ups","dash.noTodayFollowups":"No follow-ups today or overdue",
+&#x20;"dash.recentLeads":"Recent Leads","dash.noLeads":"No customers yet. Add your first lead.",
+&#x20;"dash.overview":"Business Overview","dash.orderRevenue":"Order Revenue","dash.orderProfit":"Order Gross Profit","dash.customerInquiries":"Customer Leads","dash.logisticsQuotes":"Logistics Quotes",
+&#x20;"dash.tip":"Check pending follow-ups daily and keep customer status, quotes and order costs up to date.",
+&#x20;"leads.title":"Leads","leads.desc":"Manage customer profiles, logistics needs and sales opportunities","leads.addBtn":"New Lead","leads.panelTitle":"Customer Records",
+&#x20;"leads.searchPlaceholder":"Search customer, company, country, cargo...",
+&#x20;"leads.col.customer":"Customer / Company","leads.col.country":"Country / Email","leads.col.product":"Cargo","leads.col.route":"Route","leads.col.status":"Status","leads.col.nextDate":"Next Follow-up","leads.col.actions":"Actions",
+&#x20;"followups.title":"Follow-ups","followups.desc":"Track emails, WhatsApp, calls and next contact time","followups.addBtn":"New Follow-up","followups.panelTitle":"Follow-up Tasks",
+&#x20;"followups.searchPlaceholder":"Search customer or follow-up note...",
+&#x20;"followups.col.customer":"Customer","followups.col.note":"Follow-up Note","followups.col.date":"Planned Date","followups.col.status":"Status","followups.col.actions":"Actions",
+&#x20;"followups.markDone":"Mark Done",
+&#x20;"quotes.title":"Logistics Quotes","quotes.desc":"Record shipping plans, cost references and customer quotes","quotes.addBtn":"New Quote","quotes.panelTitle":"Quote Records",
+&#x20;"quotes.searchPlaceholder":"Search customer, route or shipping method...",
+&#x20;"quotes.col.customer":"Customer","quotes.col.route":"Route","quotes.col.method":"Method","quotes.col.amount":"Amount","quotes.col.valid":"Valid Until","quotes.col.status":"Status","quotes.col.actions":"Actions",
+&#x20;"orders.title":"Order Profit Analysis","orders.desc":"Enter order revenue and cost, auto-calculate gross profit","orders.addBtn":"New Order",
+&#x20;"orders.stat.count":"Orders","orders.stat.countDesc":"All orders",
+&#x20;"orders.stat.revenue":"Total Revenue","orders.stat.revenueDesc":"Aggregated by order currency; valid only when currencies match",
+&#x20;"orders.stat.cost":"Total Cost","orders.stat.costDesc":"Aggregated by order currency",
+&#x20;"orders.stat.profit":"Gross Profit","orders.stat.profitDesc":"Revenue minus cost",
+&#x20;"orders.panelTitle":"Order Details","orders.searchPlaceholder":"Search customer or route...",
+&#x20;"orders.col.customer":"Customer","orders.col.route":"Route","orders.col.revenue":"Revenue","orders.col.cost":"Cost","orders.col.profit":"Gross Profit","orders.col.margin":"Margin","orders.col.status":"Status","orders.col.actions":"Actions",
+&#x20;"orders.note":"Note: If orders use different currencies, please convert them to one currency before comparing total revenue and gross profit. This test version does not convert currencies and does not include tax, AR/AP or real accounting functions.",
+&#x20;"email.title":"Multilingual Email Assistant","email.desc":"Choose target language and generate business email drafts; supports ZH/EN/ES/AR",
+&#x20;"email.customerName":"Customer Name","email.customerNamePlaceholder":"e.g. Maria",
+&#x20;"email.country":"Country (helps detect language)",
+&#x20;"email.countryOption.en":"USA / UK / Other English-speaking",
+&#x20;"email.countryOption.es":"Spain / Latin America",
+&#x20;"email.countryOption.ar":"Middle East / Arab countries",
+&#x20;"email.countryOption.zh":"China / Chinese customers",
+&#x20;"email.targetLang":"Target Language","email.scenario":"Scenario",
+&#x20;"email.scenario.inquiry":"Reply to New Inquiry","email.scenario.quote":"Send Logistics Quote","email.scenario.followup":"Follow Up","email.scenario.shipment":"Shipment Update","email.scenario.documents":"Confirm Documents",
+&#x20;"email.details":"Cargo / Route / Key Info","email.detailsPlaceholder":"e.g. Cargo from 6 suppliers collected, consolidating, expected to load the day after tomorrow.",
+&#x20;"email.generate":"Generate Draft + Chinese Reference",
+&#x20;"email.draftTitle":"Email Draft (Multilingual)","email.copy":"Copy Email",
+&#x20;"email.draftPlaceholder":"Generated email will appear here. You can keep editing.",
+&#x20;"email.tip":"Note: This is a front-end only page. Key info will not be auto-translated. Please verify numbers and place names manually.",
+&#x20;"settings.title":"Data Management","settings.desc":"Backup, restore or clear test data in this browser",
+&#x20;"settings.backupTitle":"Data Backup","settings.backupDesc":"Export a backup before changing phone, clearing browser data or editing code.",
+&#x20;"settings.exportJson":"Export JSON","settings.exportCsv":"Export Customers CSV","settings.importJson":"Import JSON Backup",
+&#x20;"settings.statusTitle":"Data Status",
+&#x20;"settings.statusLeads":"Leads","settings.statusFollowups":"Follow-ups","settings.statusQuotes":"Quotes","settings.statusOrders":"Orders",
+&#x20;"settings.statusNote":"Data is stored in this browser's localStorage. GitHub Pages does not sync data across devices.",
+&#x20;"settings.clear":"Clear All Test Data",
+&#x20;"modal.new":"New","modal.edit":"Edit",
+&#x20;"field.name":"Customer Name","field.company":"Company","field.country":"Country / Region","field.email":"Email","field.phone":"WhatsApp / Phone",
+&#x20;"field.product":"Cargo Type","field.route":"Route","field.method":"Method / Terms","field.volume":"Volume CBM","field.status":"Lead Status","field.nextDate":"Next Follow-up","field.notes":"Requirements & Notes",
+&#x20;"field.customer":"Customer / Company","field.date":"Planned Date","field.note":"Follow-up Note","field.taskStatus":"Task Status",
+&#x20;"field.quoteAmount":"Quote Amount","field.currency":"Currency","field.valid":"Valid Until","field.quoteStatus":"Quote Status","field.quoteNotes":"Cost Breakdown / Notes",
+&#x20;"field.orderRevenue":"Revenue","field.orderCost":"Total Cost","field.orderStatus":"Order Status","field.orderNotes":"Order Notes",
+&#x20;"status.新询盘":"New","status.已联系":"Contacted","status.报价中":"Quoting","status.等待回复":"Waiting Reply","status.已成交":"Won","status.已关闭":"Closed",
+&#x20;"status.待跟进":"Pending","status.已完成":"Done","status.已取消":"Cancelled",
+&#x20;"status.草稿":"Draft","status.已发送":"Sent","status.待确认":"Pending Confirmation","status.已接受":"Accepted","status.已失效":"Expired",
+&#x20;"status.待出运":"Pending Shipment","status.运输中":"In Transit",
+&#x20;"alert.saveFailed":"Save failed: browser storage may be full. Please export data first.",
+&#x20;"alert.copied":"Email draft copied","alert.copyFailed":"Copy failed, please long-press and copy manually","alert.copyNoContent":"Please generate or fill the draft first.",
+&#x20;"alert.importConfirm":"Import will replace all current data. Backup first. Continue?","alert.importSuccess":"Data imported successfully","alert.importFailed":"Import failed: invalid file format.",
+&#x20;"alert.clear1":"Clear all customers, follow-ups, quotes and orders?","alert.clear2":"Please confirm again. Backup first recommended.",
+&#x20;"alert.sendSuccess":"Lead saved and sent to backend email ✅","alert.sendFailed":"Lead saved, but email sending failed. Check Access Key or network ⚠️",
+&#x20;"alert.sendDisabled":"Lead saved (email sending is disabled)"
+},
+es:{
+&#x20;"nav.dashboard":"Panel","nav.leads":"Clientes","nav.followups":"Seguimientos","nav.quotes":"Cotizaciones","nav.orders":"Pedidos","nav.email":"Asistente de Email","nav.settings":"Datos",
+&#x20;"side.note":"Versión de prueba personal\<br>Los datos se guardan en este navegador\<br>No ingrese secretos comerciales reales",
+&#x20;"footer":"Morenice Supply Chain Management Co., Ltd. · Espacio de prueba privado",
+&#x20;"common.edit":"Editar","common.delete":"Eliminar","common.save":"Guardar","common.cancel":"Cancelar","common.close":"Cerrar",
+&#x20;"common.empty":"Sin registros. Haga clic en Agregar para comenzar.","common.notset":"No establecido","common.notfilled":"No completado",
+&#x20;"common.deleteConfirm":"¿Eliminar este registro? Esta acción no se puede deshacer.",
+&#x20;"dash.title":"Panel","dash.desc":"Bienvenido a Morenice CRM versión de prueba",
+&#x20;"dash.totalCustomers":"Total de Clientes","dash.totalCustomersDesc":"Todos los registros de clientes",
+&#x20;"dash.activeLeads":"Clientes Activos","dash.activeLeadsDesc":"Aún no ganados o cerrados",
+&#x20;"dash.pendingFollowups":"Seguimientos Pendientes","dash.pendingFollowupsDesc":"Todas las tareas sin terminar",
+&#x20;"dash.grossProfit":"Beneficio Bruto Total","dash.grossProfitDesc":"Ingresos menos costos",
+&#x20;"dash.todayFollowups":"Seguimientos de Hoy y Vencidos","dash.noTodayFollowups":"No hay seguimientos hoy ni vencidos",
+&#x20;"dash.recentLeads":"Clientes Recientes","dash.noLeads":"Aún no hay clientes. Agregue el primero.",
+&#x20;"dash.overview":"Resumen del Negocio","dash.orderRevenue":"Ingresos","dash.orderProfit":"Beneficio Bruto","dash.customerInquiries":"Consultas de Clientes","dash.logisticsQuotes":"Cotizaciones de Logística",
+&#x20;"dash.tip":"Revise los seguimientos pendientes a diario y actualice el estado, cotizaciones y costos.",
+&#x20;"leads.title":"Clientes","leads.desc":"Administre perfiles, necesidades logísticas y oportunidades","leads.addBtn":"Nuevo Cliente","leads.panelTitle":"Registros de Clientes",
+&#x20;"leads.searchPlaceholder":"Buscar cliente, empresa, país, carga...",
+&#x20;"leads.col.customer":"Cliente / Empresa","leads.col.country":"País / Email","leads.col.product":"Carga","leads.col.route":"Ruta","leads.col.status":"Estado","leads.col.nextDate":"Próximo Seguimiento","leads.col.actions":"Acciones",
+&#x20;"followups.title":"Seguimientos","followups.desc":"Registre emails, WhatsApp, llamadas y próxima fecha de contacto","followups.addBtn":"Nuevo Seguimiento","followups.panelTitle":"Tareas de Seguimiento",
+&#x20;"followups.searchPlaceholder":"Buscar cliente o nota de seguimiento...",
+&#x20;"followups.col.customer":"Cliente","followups.col.note":"Nota","followups.col.date":"Fecha Planificada","followups.col.status":"Estado","followups.col.actions":"Acciones",
+&#x20;"followups.markDone":"Marcar Hecho",
+&#x20;"quotes.title":"Cotizaciones de Logística","quotes.desc":"Registre planes, costos de referencia y cotizaciones","quotes.addBtn":"Nueva Cotización","quotes.panelTitle":"Registros de Cotización",
+&#x20;"quotes.searchPlaceholder":"Buscar cliente, ruta o método...",
+&#x20;"quotes.col.customer":"Cliente","quotes.col.route":"Ruta","quotes.col.method":"Método","quotes.col.amount":"Monto","quotes.col.valid":"Válido Hasta","quotes.col.status":"Estado","quotes.col.actions":"Acciones",
+&#x20;"orders.title":"Análisis de Beneficio","orders.desc":"Ingrese ingresos y costos, calcule automáticamente el beneficio bruto","orders.addBtn":"Nuevo Pedido",
+&#x20;"orders.stat.count":"Pedidos","orders.stat.countDesc":"Todos los pedidos",
+&#x20;"orders.stat.revenue":"Ingresos Totales","orders.stat.revenueDesc":"Agregado por moneda del pedido; válido solo si las monedas coinciden",
+&#x20;"orders.stat.cost":"Costo Total","orders.stat.costDesc":"Agregado por moneda del pedido",
+&#x20;"orders.stat.profit":"Beneficio Bruto","orders.stat.profitDesc":"Ingresos menos costo",
+&#x20;"orders.panelTitle":"Detalles de Pedidos","orders.searchPlaceholder":"Buscar cliente o ruta...",
+&#x20;"orders.col.customer":"Cliente","orders.col.route":"Ruta","orders.col.revenue":"Ingresos","orders.col.cost":"Costo","orders.col.profit":"Beneficio","orders.col.margin":"Margen","orders.col.status":"Estado","orders.col.actions":"Acciones",
+&#x20;"orders.note":"Nota: Si los pedidos usan diferentes monedas, conviértalas a una sola antes de comparar. Esta versión no convierte monedas ni incluye impuestos o funciones contables reales.",
+&#x20;"email.title":"Asistente de Email Multilingüe","email.desc":"Elija el idioma destino y genere borradores; soporta ZH/EN/ES/AR",
+&#x20;"email.customerName":"Nombre del Cliente","email.customerNamePlaceholder":"ej. Maria",
+&#x20;"email.country":"País (ayuda a detectar el idioma)",
+&#x20;"email.countryOption.en":"EE.UU. / Reino Unido / Otros",
+&#x20;"email.countryOption.es":"España / América Latina",
+&#x20;"email.countryOption.ar":"Medio Oriente / Países árabes",
+&#x20;"email.countryOption.zh":"China / Clientes chinos",
+&#x20;"email.targetLang":"Idioma Destino","email.scenario":"Escenario",
+&#x20;"email.scenario.inquiry":"Responder Nueva Consulta","email.scenario.quote":"Enviar Cotización","email.scenario.followup":"Seguimiento","email.scenario.shipment":"Actualización de Envío","email.scenario.documents":"Confirmar Documentos",
+&#x20;"email.details":"Carga / Ruta / Info Clave","email.detailsPlaceholder":"ej. Carga de 6 proveedores recolectada, consolidando, carga prevista pasado mañana.",
+&#x20;"email.generate":"Generar Borrador + Referencia en Chino",
+&#x20;"email.draftTitle":"Borrador de Email","email.copy":"Copiar Email",
+&#x20;"email.draftPlaceholder":"El email generado aparecerá aquí. Puede seguir editando.",
+&#x20;"email.tip":"Nota: Página solo front-end. La información clave no se traduce automáticamente. Verifique números y lugares.",
+&#x20;"settings.title":"Gestión de Datos","settings.desc":"Respalde, restaure o borre los datos de prueba",
+&#x20;"settings.backupTitle":"Respaldo de Datos","settings.backupDesc":"Exporte un respaldo antes de cambiar de teléfono o navegador.",
+&#x20;"settings.exportJson":"Exportar JSON","settings.exportCsv":"Exportar CSV de Clientes","settings.importJson":"Importar JSON",
+&#x20;"settings.statusTitle":"Estado de Datos",
+&#x20;"settings.statusLeads":"Clientes","settings.statusFollowups":"Seguimientos","settings.statusQuotes":"Cotizaciones","settings.statusOrders":"Pedidos",
+&#x20;"settings.statusNote":"Los datos se guardan en localStorage de este navegador. GitHub Pages no sincroniza entre dispositivos.",
+&#x20;"settings.clear":"Borrar Todos los Datos",
+&#x20;"modal.new":"Nuevo","modal.edit":"Editar",
+&#x20;"field.name":"Nombre del Cliente","field.company":"Empresa","field.country":"País / Región","field.email":"Email","field.phone":"WhatsApp / Teléfono",
+&#x20;"field.product":"Tipo de Carga","field.route":"Ruta","field.method":"Método / Términos","field.volume":"Volumen CBM","field.status":"Estado del Cliente","field.nextDate":"Próximo Seguimiento","field.notes":"Requisitos y Notas",
+&#x20;"field.customer":"Cliente / Empresa","field.date":"Fecha Planificada","field.note":"Nota de Seguimiento","field.taskStatus":"Estado de Tarea",
+&#x20;"field.quoteAmount":"Monto de Cotización","field.currency":"Moneda","field.valid":"Válido Hasta","field.quoteStatus":"Estado de Cotización","field.quoteNotes":"Desglose / Notas",
+&#x20;"field.orderRevenue":"Ingresos","field.orderCost":"Costo Total","field.orderStatus":"Estado del Pedido","field.orderNotes":"Notas del Pedido",
+&#x20;"status.新询盘":"Nuevo","status.已联系":"Contactado","status.报价中":"Cotizando","status.等待回复":"Esperando Respuesta","status.已成交":"Ganado","status.已关闭":"Cerrado",
+&#x20;"status.待跟进":"Pendiente","status.已完成":"Hecho","status.已取消":"Cancelado",
+&#x20;"status.草稿":"Borrador","status.已发送":"Enviado","status.待确认":"Pendiente Confirmación","status.已接受":"Aceptado","status.已失效":"Expirado",
+&#x20;"status.待出运":"Pendiente Envío","status.运输中":"En Tránsito",
+&#x20;"alert.saveFailed":"Error al guardar: el almacenamiento puede estar lleno. Exporte datos primero.",
+&#x20;"alert.copied":"Borrador copiado","alert.copyFailed":"Error al copiar, mantenga presionado para copiar","alert.copyNoContent":"Genere o complete el borrador primero.",
+&#x20;"alert.importConfirm":"La importación reemplazará todos los datos. ¿Continuar?","alert.importSuccess":"Datos importados","alert.importFailed":"Error al importar: formato inválido.",
+&#x20;"alert.clear1":"¿Borrar todos los clientes, seguimientos, cotizaciones y pedidos?","alert.clear2":"Confirme de nuevo. Se recomienda respaldar primero.",
+&#x20;"alert.sendSuccess":"Cliente guardado y enviado al correo backend ✅","alert.sendFailed":"Cliente guardado, pero falló el envío. Verifique la clave o la red ⚠️",
+&#x20;"alert.sendDisabled":"Cliente guardado (envío de correo desactivado)"
+},
+ar:{
+&#x20;"nav.dashboard":"لوحة التحكم","nav.leads":"العملاء","nav.followups":"المتابعات","nav.quotes":"عروض الأسعار","nav.orders":"الطلبات","nav.email":"مساعد البريد","nav.settings":"البيانات",
+&#x20;"side.note":"نسخة اختبار شخصية\<br>البيانات محفوظة في هذا المتصفح\<br>لا تدخل أسراراً تجارية حقيقية",
+&#x20;"footer":"Morenice Supply Chain Management Co., Ltd. · مساحة اختبار خاصة",
+&#x20;"common.edit":"تعديل","common.delete":"حذف","common.save":"حفظ","common.cancel":"إلغاء","common.close":"إغلاق",
+&#x20;"common.empty":"لا توجد سجلات. انقر على إضافة للبدء.","common.notset":"غير محدد","common.notfilled":"غير مُعبأ",
+&#x20;"common.deleteConfirm":"حذف هذا السجل؟ لا يمكن التراجع.",
+&#x20;"dash.title":"لوحة التحكم","dash.desc":"مرحباً بك في نسخة الاختبار من Morenice CRM",
+&#x20;"dash.totalCustomers":"إجمالي العملاء","dash.totalCustomersDesc":"جميع سجلات العملاء",
+&#x20;"dash.activeLeads":"العملاء النشطون","dash.activeLeadsDesc":"لم يتم الفوز أو الإغلاق بعد",
+&#x20;"dash.pendingFollowups":"المتابعات المعلقة","dash.pendingFollowupsDesc":"كل المهام غير المكتملة",
+&#x20;"dash.grossProfit":"إجمالي الربح","dash.grossProfitDesc":"الإيرادات ناقص التكلفة",
+&#x20;"dash.todayFollowups":"متابعات اليوم والمتأخرة","dash.noTodayFollowups":"لا توجد متابعات اليوم أو متأخرة",
+&#x20;"dash.recentLeads":"أحدث العملاء","dash.noLeads":"لا يوجد عملاء بعد. أضف الأول.",
+&#x20;"dash.overview":"نظرة عامة","dash.orderRevenue":"إيرادات الطلبات","dash.orderProfit":"ربح الطلبات","dash.customerInquiries":"استفسارات العملاء","dash.logisticsQuotes":"عروض الشحن",
+&#x20;"dash.tip":"راجع المتابعات المعلقة يومياً وحدّث حالة العملاء والأسعار والتكاليف.",
+&#x20;"leads.title":"العملاء","leads.desc":"إدارة بيانات العملاء والاحتياجات اللوجستية وفرص البيع","leads.addBtn":"عميل جديد","leads.panelTitle":"سجلات العملاء",
+&#x20;"leads.searchPlaceholder":"ابحث عن عميل، شركة، دولة، بضاعة...",
+&#x20;"leads.col.customer":"العميل / الشركة","leads.col.country":"الدولة / البريد","leads.col.product":"البضاعة","leads.col.route":"المسار","leads.col.status":"الحالة","leads.col.nextDate":"المتابعة القادمة","leads.col.actions":"إجراءات",
+&#x20;"followups.title":"المتابعات","followups.desc":"تتبع البريد وواتساب والمكالمات","followups.addBtn":"متابعة جديدة","followups.panelTitle":"مهام المتابعة",
+&#x20;"followups.searchPlaceholder":"ابحث عن عميل أو ملاحظة...",
+&#x20;"followups.col.customer":"العميل","followups.col.note":"الملاحظة","followups.col.date":"التاريخ المخطط","followups.col.status":"الحالة","followups.col.actions":"إجراءات",
+&#x20;"followups.markDone":"تحديد كمكتمل",
+&#x20;"quotes.title":"عروض الشحن","quotes.desc":"سجّل الخطط والتكاليف وعروض العملاء","quotes.addBtn":"عرض جديد","quotes.panelTitle":"سجلات العروض",
+&#x20;"quotes.searchPlaceholder":"ابحث عن عميل، مسار أو طريقة...",
+&#x20;"quotes.col.customer":"العميل","quotes.col.route":"المسار","quotes.col.method":"الطريقة","quotes.col.amount":"المبلغ","quotes.col.valid":"صالح حتى","quotes.col.status":"الحالة","quotes.col.actions":"إجراءات",
+&#x20;"orders.title":"تحليل أرباح الطلبات","orders.desc":"أدخل الإيرادات والتكاليف، واحسب الربح تلقائياً","orders.addBtn":"طلب جديد",
+&#x20;"orders.stat.count":"الطلبات","orders.stat.countDesc":"كل الطلبات",
+&#x20;"orders.stat.revenue":"إجمالي الإيرادات","orders.stat.revenueDesc":"مجموع بعملة الطلب؛ صالح فقط عند توحيد العملة",
+&#x20;"orders.stat.cost":"إجمالي التكلفة","orders.stat.costDesc":"مجموع بعملة الطلب",
+&#x20;"orders.stat.profit":"الربح","orders.stat.profitDesc":"الإيراد ناقص التكلفة",
+&#x20;"orders.panelTitle":"تفاصيل الطلبات","orders.searchPlaceholder":"ابحث عن عميل أو مسار...",
+&#x20;"orders.col.customer":"العميل","orders.col.route":"المسار","orders.col.revenue":"الإيراد","orders.col.cost":"التكلفة","orders.col.profit":"الربح","orders.col.margin":"الهامش","orders.col.status":"الحالة","orders.col.actions":"إجراءات",
+&#x20;"orders.note":"ملاحظة: إذا استخدمت الطلبات عملات مختلفة، وحّدها قبل المقارنة. هذه النسخة لا تحوّل العملات ولا تتضمن ضرائب أو وظائف محاسبية حقيقية.",
+&#x20;"email.title":"مساعد البريد متعدد اللغات","email.desc":"اختر اللغة الهدف وأنشئ مسودات البريد؛ يدعم ZH/EN/ES/AR",
+&#x20;"email.customerName":"اسم العميل","email.customerNamePlaceholder":"مثال: Maria",
+&#x20;"email.country":"الدولة (تساعد على تحديد اللغة)",
+&#x20;"email.countryOption.en":"أمريكا / بريطانيا / دول ناطقة بالإنجليزية",
+&#x20;"email.countryOption.es":"إسبانيا / أمريكا اللاتينية",
+&#x20;"email.countryOption.ar":"الشرق الأوسط / الدول العربية",
+&#x20;"email.countryOption.zh":"الصين / العملاء الصينيون",
+&#x20;"email.targetLang":"اللغة الهدف","email.scenario":"السيناريو",
+&#x20;"email.scenario.inquiry":"الرد على استفسار جديد","email.scenario.quote":"إرسال عرض شحن","email.scenario.followup":"متابعة","email.scenario.shipment":"تحديث الشحنة","email.scenario.documents":"تأكيد المستندات",
+&#x20;"email.details":"البضاعة / المسار / المعلومات المهمة","email.detailsPlaceholder":"مثال: تم جمع بضاعة 6 موردين، جاري التجميع، الشحن بعد غد.",
+&#x20;"email.generate":"إنشاء المسودة + مرجع بالصينية",
+&#x20;"email.draftTitle":"مسودة البريد","email.copy":"نسخ البريد",
+&#x20;"email.draftPlaceholder":"سيظهر البريد المُنشأ هنا. يمكنك تعديله.",
+&#x20;"email.tip":"ملاحظة: صفحة أمامية فقط. المعلومات المهمة لا تُترجم تلقائياً. راجع الأرقام والأسماء يدوياً.",
+&#x20;"settings.title":"إدارة البيانات","settings.desc":"نسخ احتياطي أو استعادة أو حذف بيانات الاختبار",
+&#x20;"settings.backupTitle":"نسخ احتياطي","settings.backupDesc":"صدّر نسخة قبل تغيير الجهاز أو مسح المتصفح.",
+&#x20;"settings.exportJson":"تصدير JSON","settings.exportCsv":"تصدير CSV للعملاء","settings.importJson":"استيراد نسخة JSON",
+&#x20;"settings.statusTitle":"حالة البيانات",
+&#x20;"settings.statusLeads":"العملاء","settings.statusFollowups":"المتابعات","settings.statusQuotes":"العروض","settings.statusOrders":"الطلبات",
+&#x20;"settings.statusNote":"البيانات محفوظة في localStorage لهذا المتصفح. GitHub Pages لا يزامن بين الأجهزة.",
+&#x20;"settings.clear":"حذف كل بيانات الاختبار",
+&#x20;"modal.new":"جديد","modal.edit":"تعديل",
+&#x20;"field.name":"اسم العميل","field.company":"الشركة","field.country":"الدولة / المنطقة","field.email":"البريد الإلكتروني","field.phone":"واتساب / الهاتف",
+&#x20;"field.product":"نوع البضاعة","field.route":"المسار","field.method":"الطريقة / الشروط","field.volume":"الحجم CBM","field.status":"حالة العميل","field.nextDate":"المتابعة القادمة","field.notes":"المتطلبات والملاحظات",
+&#x20;"field.customer":"العميل / الشركة","field.date":"التاريخ المخطط","field.note":"ملاحظة المتابعة","field.taskStatus":"حالة المهمة",
+&#x20;"field.quoteAmount":"مبلغ العرض","field.currency":"العملة","field.valid":"صالح حتى","field.quoteStatus":"حالة العرض","field.quoteNotes":"تفاصيل التكلفة / ملاحظات",
+&#x20;"field.orderRevenue":"الإيراد","field.orderCost":"إجمالي التكلفة","field.orderStatus":"حالة الطلب","field.orderNotes":"ملاحظات الطلب",
+&#x20;"status.新询盘":"جديد","status.已联系":"تم التواصل","status.报价中":"جاري التسعير","status.等待回复":"بانتظار الرد","status.已成交":"تم الفوز","status.已关闭":"مغلق",
+&#x20;"status.待跟进":"معلق","status.已完成":"مكتمل","status.已取消":"ملغى",
+&#x20;"status.草稿":"مسودة","status.已发送":"تم الإرسال","status.待确认":"بانتظار التأكيد","status.已接受":"مقبول","status.已失效":"منتهي",
+&#x20;"status.待出运":"بانتظار الشحن","status.运输中":"قيد النقل",
+&#x20;"alert.saveFailed":"فشل الحفظ: قد تكون مساحة المتصفح ممتلئة. صدّر البيانات أولاً.",
+&#x20;"alert.copied":"تم نسخ المسودة","alert.copyFailed":"فشل النسخ، اضغط مطولاً للنسخ يدوياً","alert.copyNoContent":"أنشئ أو املأ المسودة أولاً.",
+&#x20;"alert.importConfirm":"سيستبدل الاستيراد جميع البيانات. هل تريد المتابعة؟","alert.importSuccess":"تم استيراد البيانات","alert.importFailed":"فشل الاستيراد: صيغة الملف غير صحيحة.",
+&#x20;"alert.clear1":"حذف جميع العملاء والمتابعات والعروض والطلبات؟","alert.clear2":"يرجى التأكيد مرة أخرى. يُفضل أخذ نسخة احتياطية.",
+&#x20;"alert.sendSuccess":"تم حفظ العميل وإرساله إلى بريد الإدارة ✅","alert.sendFailed":"تم حفظ العميل، لكن فشل الإرسال. تحقق من المفتاح أو الشبكة ⚠️",
+&#x20;"alert.sendDisabled":"تم حفظ العميل (إرسال البريد معطّل)"
+}
+};
+
+let lang = localStorage.getItem("morenice_lang") || "zh";
+function t(k){ return (I18N[lang] && I18N[lang][k]) ?? I18N.zh[k] ?? k; }
+function tStatus(v){ return t("status."+v) || v; }
+function applyDir(){
+&#x20;document.documentElement.dir = lang==="ar" ? "rtl" : "ltr";
+&#x20;document.documentElement.lang = lang==="zh"?"zh-CN":lang;
+}
+
+/\* ================= 数据层 ================= \*/
 const $ = id => document.getElementById(id);
 const STORE = "morenice_crm_test_v1";
-const navItems = [
- ["dashboard","工作台","Dashboard"],
- ["leads","客户询盘","Leads"],
- ["followups","跟进提醒","Follow-ups"],
- ["quotes","物流报价","Quotes"],
- ["orders","订单利润","Orders"],
- ["email","多语言邮件助手","Email Assistant"],
- ["settings","数据管理","Data"]
-];
+const navItems = ["dashboard","leads","followups","quotes","orders","email","settings"];
 const emptyDB = () => ({leads:[],followups:[],quotes:[],orders:[]});
 let db;
-try {
- db = JSON.parse(localStorage.getItem(STORE)) || emptyDB();
-} catch(e) {
- db = emptyDB();
-}
+try { db = JSON.parse(localStorage.getItem(STORE)) || emptyDB(); } catch(e){ db = emptyDB(); }
 let page = "dashboard";
 let editContext = null;
 
 function save(){
- try{
-  localStorage.setItem(STORE,JSON.stringify(db));
-  return true;
- }catch(e){
-  alert("保存失败：浏览器存储空间可能不足，请先导出数据。");
-  return false;
- }
+&#x20;try{ localStorage.setItem(STORE,JSON.stringify(db)); return true; }
+&#x20;catch(e){ alert(t("alert.saveFailed")); return false; }
 }
-function esc(v){
- return String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function money(n,currency="USD"){
- return new Intl.NumberFormat("en-US",{style:"currency",currency:currency,maximumFractionDigits:2}).format(Number(n)||0);
-}
-function dateToday(){
- return new Date().toISOString().slice(0,10);
-}
+function esc(v){ return String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function money(n,currency="USD"){ return new Intl.NumberFormat("en-US",{style:"currency",currency:currency,maximumFractionDigits:2}).format(Number(n)||0); }
+function dateToday(){ return new Date().toISOString().slice(0,10); }
+
+/\* ================= 导航 ================= \*/
 function nav(){
- const html=navItems.map(([id,cn,en])=>`<button class="${page===id?"active":""}" onclick="go('${id}')">${cn}</button>`).join("");
- $("sideNav").innerHTML=html;
- $("mobileNav").innerHTML=navItems.filter(x=>x[0]!=="settings").map(([id,cn])=>`<button class="${page===id?"active":""}" onclick="go('${id}')">${cn}</button>`).join("");
- $("topTitle").textContent=navItems.find(x=>x[0]===page)?.[1]||"工作台";
+&#x20;const side = navItems.map(id=>\`\<button class="${page===id?"active":""}" onclick="go('${id}')">${t("nav."+id)}\</button>\`).join("");
+&#x20;$("sideNav").innerHTML = side;
+&#x20;$("mobileNav").innerHTML = navItems.filter(x=>x!=="settings").map(id=>\`\<button class="${page===id?"active":""}" onclick="go('${id}')">${t("nav."+id)}\</button>\`).join("");
+&#x20;$("topTitle").textContent = t("nav."+page);
+&#x20;$("sideNote").innerHTML = t("side.note");
+&#x20;$("footerText").textContent = t("footer");
+&#x20;$("modalCloseBtn").textContent = t("common.close");
+&#x20;$("modalCancelBtn").textContent = t("common.cancel");
+&#x20;$("modalSaveBtn").textContent = t("common.save");
+&#x20;$("langSelect").value = lang;
 }
-function go(id){page=id;nav();render();window.scrollTo(0,0)}
-function heading(title,desc,button=""){
- return `<div class="heading"><div><h1>${title}</h1><div class="muted">${desc}</div></div>${button}</div>`;
+function go(id){ page=id; nav(); render(); window\.scrollTo(0,0); }
+function changeLang(v){
+&#x20;lang = v;
+&#x20;localStorage.setItem("morenice_lang", lang);
+&#x20;applyDir();
+&#x20;nav();
+&#x20;render();
 }
-function stat(title,value,desc){
- return `<div class="stat"><div class="stat-label">${title}</div><div class="stat-value">${value}</div><div class="muted">${desc}</div></div>`;
-}
-function panel(title,body,extra=""){
- return `<section class="panel"><div class="panel-head"><h2>${title}</h2>${extra}</div>${body}</section>`;
-}
-function btnAdd(type,label){
- return `<button class="btn primary" onclick="openEditor('${type}')">+ ${label}</button>`;
-}
-function table(headers,rows){
- return `<div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows||`<tr><td colspan="${headers.length}" class="empty">暂无记录，点击新增开始使用</td></tr>`}</tbody></table></div>`;
-}
-function actionButtons(type,id){
- return `<div class="actions"><button class="btn small" onclick="openEditor('${type}','${id}')">编辑</button><button class="btn small danger" onclick="removeRecord('${type}','${id}')">删除</button></div>`;
-}
-function filterBar(type,placeholder){
- return `<input class="search" placeholder="${placeholder}" oninput="filterTable('${type}',this.value)">`;
-}
-function filterTable(type,value){
- document.querySelectorAll(`[data-type="${type}"]`).forEach(row=>{
-  row.classList.toggle("hidden",!row.dataset.search.includes(value.toLowerCase()));
- });
-}
+
+/\* ================= 通用片段 ================= \*/
+function heading(title,desc,button=""){ return \`\<div class="heading">\<div>\<h1>${title}\</h1>\<div class="muted">${desc}\</div>\</div>${button}\</div>\`; }
+function stat(title,value,desc){ return \`\<div class="stat">\<div class="stat-label">${title}\</div>\<div class="stat-value">${value}\</div>\<div class="muted">${desc}\</div>\</div>\`; }
+function panel(title,body,extra=""){ return \`\<section class="panel">\<div class="panel-head">\<h2>${title}\</h2>${extra}\</div>${body}\</section>\`; }
+function btnAdd(type,label){ return \`\<button class="btn primary" onclick="openEditor('${type}')">+ ${label}\</button>\`; }
+function table(headers,rows){ return \`\<div class="table-wrap">\<table>\<thead>\<tr>${headers.map(h=>\`\<th>${h}\</th>\`).join("")}\</tr>\</thead>\<tbody>${rows||\`\<tr>\<td colspan="${headers.length}" class="empty">${t("common.empty")}\</td>\</tr>\`}\</tbody>\</table>\</div>\`; }
+function actionButtons(type,id){ return \`\<div class="actions">\<button class="btn small" onclick="openEditor('${type}','${id}')">${t("common.edit")}\</button>\<button class="btn small danger" onclick="removeRecord('${type}','${id}')">${t("common.delete")}\</button>\</div>\`; }
+function filterBar(type,placeholder){ return \`\<input class="search" placeholder="${placeholder}" oninput="filterTable('${type}',this.value)">\`; }
+function filterTable(type,value){ document.querySelectorAll(\`[data-type="${type}"]\`).forEach(row=>{ row\.classList.toggle("hidden",!row\.dataset.search.includes(value.toLowerCase())); }); }
+
 function render(){
- nav();
- const el=$("content");
- if(page==="dashboard") el.innerHTML=dashboard();
- else if(page==="leads") el.innerHTML=leadsPage();
- else if(page==="followups") el.innerHTML=followupsPage();
- else if(page==="quotes") el.innerHTML=quotesPage();
- else if(page==="orders") el.innerHTML=ordersPage();
- else if(page==="email") el.innerHTML=emailPage();
- else if(page==="settings") el.innerHTML=settingsPage();
+&#x20;nav();
+&#x20;const el=$("content");
+&#x20;if(page==="dashboard") el.innerHTML=dashboard();
+&#x20;else if(page==="leads") el.innerHTML=leadsPage();
+&#x20;else if(page==="followups") el.innerHTML=followupsPage();
+&#x20;else if(page==="quotes") el.innerHTML=quotesPage();
+&#x20;else if(page==="orders") el.innerHTML=ordersPage();
+&#x20;else if(page==="email") el.innerHTML=emailPage();
+&#x20;else if(page==="settings") el.innerHTML=settingsPage();
 }
 
+/\* ================= 工作台 ================= \*/
 function dashboard(){
- const active=db.leads.filter(x=>x.status!=="已成交"&&x.status!=="已关闭").length;
- const pending=db.followups.filter(x=>x.status!=="已完成").length;
- const revenue=db.orders.reduce((s,x)=>s+(+x.revenue||0),0);
- const profit=db.orders.reduce((s,x)=>s+(+x.revenue||0)-(+x.cost||0),0);
- const today=db.followups.filter(x=>x.status!=="已完成"&&x.date&&x.date<=dateToday());
- const latest=db.leads.slice(-5).reverse();
- return heading("工作台 Dashboard","欢迎使用 Morenice CRM 个人测试版")
- +`<div class="stats">${stat("客户总数",db.leads.length,"全部客户档案")}${stat("跟进中询盘",active,"尚未成交或关闭")}${stat("待处理跟进",pending,"所有未完成事项")}${stat("累计订单毛利",money(profit),"订单收入减去成本")}</div>`
- +panel("今日及逾期跟进",today.length?table(["客户","跟进内容","计划日期","状态"],today.map(x=>`<tr><td>${esc(x.customer)}</td><td>${esc(x.note)}</td><td>${esc(x.date)}</td><td><span class="badge orange">${esc(x.status)}</span></td></tr>`)):`<div class="empty">暂无今日或逾期跟进</div>`)
- +`<div class="two-col">${panel("最近客户询盘",latest.length?table(["客户","国家","状态"],latest.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.country)}</td><td>${esc(x.status)}</td></tr>`)):`<div class="empty">还没有客户，添加第一条询盘吧。</div>`)}${panel("业务概览",`<p>订单收入：<strong>${money(revenue)}</strong></p><p>订单毛利：<strong>${money(profit)}</strong></p><p>客户询盘：<strong>${db.leads.length}</strong></p><p>物流报价：<strong>${db.quotes.length}</strong></p><div class="note">建议每天查看待跟进事项，及时更新客户状态、报价和订单成本。</div>`)}</div>`;
-}
-function leadsPage(){
- const rows=db.leads.map(x=>`<tr data-type="leads" data-search="${esc([x.name,x.company,x.country,x.email,x.product,x.status].join(" ").toLowerCase())}"><td><strong>${esc(x.name)}</strong><br>${esc(x.company)}</td><td>${esc(x.country)}<br>${esc(x.email)}</td><td>${esc(x.product)}</td><td>${esc(x.route)}</td><td><span class="badge">${esc(x.status)}</span></td><td>${esc(x.nextDate||"未设置")}</td><td>${actionButtons("leads",x.id)}</td></tr>`).join("");
- return heading("客户询盘","管理客户资料、物流需求和销售机会",btnAdd("leads","新增客户"))
- +panel("客户档案",filterBar("leads","搜索客户、公司、国家、货物...")+table(["客户 / 公司","国家 / 邮箱","货物需求","运输路线","状态","下次跟进","操作"],rows));
-}
-function followupsPage(){
- const rows=db.followups.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(x=>`<tr data-type="followups" data-search="${esc([x.customer,x.note,x.status].join(" ").toLowerCase())}"><td>${esc(x.customer)}</td><td>${esc(x.note)}</td><td>${esc(x.date)}</td><td><span class="badge ${x.status==="已完成"?"green":"orange"}">${esc(x.status)}</span></td><td><div class="actions"><button class="btn small" onclick="completeFollowup('${x.id}')">标记完成</button>${actionButtons("followups",x.id)}</div></td></tr>`).join("");
- return heading("跟进提醒","记录邮件、WhatsApp、电话和下一次联系时间",btnAdd("followups","新增跟进"))
- +panel("跟进任务",filterBar("followups","搜索客户或跟进内容...")+table(["客户","跟进内容","计划日期","状态","操作"],rows));
-}
-function quotesPage(){
- const rows=db.quotes.map(x=>`<tr data-type="quotes" data-search="${esc([x.customer,x.route,x.method,x.status].join(" ").toLowerCase())}"><td>${esc(x.customer)}</td><td>${esc(x.route)}</td><td>${esc(x.method)}</td><td>${money(x.amount,x.currency)}</td><td>${esc(x.valid||"未填写")}</td><td>${esc(x.status)}</td><td>${actionButtons("quotes",x.id)}</td></tr>`).join("");
- return heading("物流报价","记录运输方案、成本参考和客户报价",btnAdd("quotes","新增报价"))
- +panel("报价记录",filterBar("quotes","搜索客户、路线或运输方式...")+table(["客户","运输路线","运输方式","报价金额","有效期","状态","操作"],rows));
-}
-function ordersPage(){
- const revenue=db.orders.reduce((s,x)=>s+(+x.revenue||0),0);
- const cost=db.orders.reduce((s,x)=>s+(+x.cost||0),0);
- const profit=revenue-cost;
- const rows=db.orders.map(x=>{
-  const p=(+x.revenue||0)-(+x.cost||0);
-  const margin=(+x.revenue||0)?(p/(+x.revenue||1)*100):0;
-  return `<tr data-type="orders" data-search="${esc([x.customer,x.route,x.status].join(" ").toLowerCase())}"><td>${esc(x.customer)}</td><td>${esc(x.route)}</td><td>${money(x.revenue,x.currency)}</td><td>${money(x.cost,x.currency)}</td><td><strong>${money(p,x.currency)}</strong></td><td>${margin.toFixed(1)}%</td><td>${esc(x.status)}</td><td>${actionButtons("orders",x.id)}</td></tr>`;
- }).join("");
- return heading("订单利润分析","录入订单收入与成本，自动核算毛利",btnAdd("orders","新增订单"))
- +`<div class="stats">${stat("订单数量",db.orders.length,"全部订单")}${stat("总收入",money(revenue),"按订单币种汇总，仅适用于币种一致的情况")}${stat("总成本",money(cost),"按订单币种汇总")}${stat("毛利",money(profit),"收入减去成本")}</div>`
- +panel("订单明细",filterBar("orders","搜索客户或路线...")+table(["客户","运输路线","收入","成本","毛利","毛利率","状态","操作"],rows))
- +`<div class="note">注意：如果订单使用不同币种，请先统一换算为同一币种再比较总收入和总毛利。本测试版不自动换汇，也不包含税务、应收应付或实际财务账簿功能。</div>`;
+&#x20;const active=db.leads.filter(x=>x.status!=="已成交"&&x.status!=="已关闭").length;
+&#x20;const pending=db.followups.filter(x=>x.status!=="已完成").length;
+&#x20;const revenue=db.orders.reduce((s,x)=>s+(+x.revenue||0),0);
+&#x20;const profit=db.orders.reduce((s,x)=>s+(+x.revenue||0)-(+x.cost||0),0);
+&#x20;const today=db.followups.filter(x=>x.status!=="已完成"&&x.date&&x.date<=dateToday());
+&#x20;const latest=db.leads.slice(-5).reverse();
+&#x20;return heading(t("dash.title"),t("dash.desc"))
+&#x20;+\`\<div class="stats">${stat(t("dash.totalCustomers"),db.leads.length,t("dash.totalCustomersDesc"))}${stat(t("dash.activeLeads"),active,t("dash.activeLeadsDesc"))}${stat(t("dash.pendingFollowups"),pending,t("dash.pendingFollowupsDesc"))}${stat(t("dash.grossProfit"),money(profit),t("dash.grossProfitDesc"))}\</div>\`
+&#x20;+panel(t("dash.todayFollowups"),today.length?table([t("followups.col.customer"),t("followups.col.note"),t("followups.col.date"),t("followups.col.status")],today.map(x=>\`\<tr>\<td>${esc(x.customer)}\</td>\<td>${esc(x.note)}\</td>\<td>${esc(x.date)}\</td>\<td>\<span class="badge orange">${tStatus(x.status)}\</span>\</td>\</tr>\`)):\`\<div class="empty">${t("dash.noTodayFollowups")}\</div>\`)
+&#x20;+\`\<div class="two-col">${panel(t("dash.recentLeads"),latest.length?table([t("leads.col.customer"),t("leads.col.country"),t("leads.col.status")],latest.map(x=>\`\<tr>\<td>${esc(x.name)}\</td>\<td>${esc(x.country)}\</td>\<td>${tStatus(x.status)}\</td>\</tr>\`)):\`\<div class="empty">${t("dash.noLeads")}\</div>\`)}${panel(t("dash.overview"),\`\<p>${t("dash.orderRevenue")}: \<strong>${money(revenue)}\</strong>\</p>\<p>${t("dash.orderProfit")}: \<strong>${money(profit)}\</strong>\</p>\<p>${t("dash.customerInquiries")}: \<strong>${db.leads.length}\</strong>\</p>\<p>${t("dash.logisticsQuotes")}: \<strong>${db.quotes.length}\</strong>\</p>\<div class="note">${t("dash.tip")}\</div>\`)}\</div>\`;
 }
 
-// ---------------- 多语言邮件助手开始 ----------------
+/\* ================= 客户询盘 ================= \*/
+function leadsPage(){
+&#x20;const rows=db.leads.map(x=>\`\<tr data-type="leads" data-search="${esc([x.name,x.company,x.country,x.email,x.product,x.status].join(" ").toLowerCase())}">\<td>\<strong>${esc(x.name)}\</strong>\<br>${esc(x.company)}\</td>\<td>${esc(x.country)}\<br>${esc(x.email)}\</td>\<td>${esc(x.product)}\</td>\<td>${esc(x.route)}\</td>\<td>\<span class="badge">${tStatus(x.status)}\</span>\</td>\<td>${esc(x.nextDate||t("common.notset"))}\</td>\<td>${actionButtons("leads",x.id)}\</td>\</tr>\`).join("");
+&#x20;return heading(t("leads.title"),t("leads.desc"),btnAdd("leads",t("leads.addBtn")))
+&#x20;+panel(t("leads.panelTitle"),filterBar("leads",t("leads.searchPlaceholder"))+table([t("leads.col.customer"),t("leads.col.country"),t("leads.col.product"),t("leads.col.route"),t("leads.col.status"),t("leads.col.nextDate"),t("leads.col.actions")],rows));
+}
+
+/\* ================= 跟进 ================= \*/
+function followupsPage(){
+&#x20;const rows=db.followups.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(x=>\`\<tr data-type="followups" data-search="${esc([x.customer,x.note,x.status].join(" ").toLowerCase())}">\<td>${esc(x.customer)}\</td>\<td>${esc(x.note)}\</td>\<td>${esc(x.date)}\</td>\<td>\<span class="badge ${x.status==="已完成"?"green":"orange"}">${tStatus(x.status)}\</span>\</td>\<td>\<div class="actions">\<button class="btn small" onclick="completeFollowup('${x.id}')">${t("followups.markDone")}\</button>${actionButtons("followups",x.id)}\</div>\</td>\</tr>\`).join("");
+&#x20;return heading(t("followups.title"),t("followups.desc"),btnAdd("followups",t("followups.addBtn")))
+&#x20;+panel(t("followups.panelTitle"),filterBar("followups",t("followups.searchPlaceholder"))+table([t("followups.col.customer"),t("followups.col.note"),t("followups.col.date"),t("followups.col.status"),t("followups.col.actions")],rows));
+}
+
+/\* ================= 报价 ================= \*/
+function quotesPage(){
+&#x20;const rows=db.quotes.map(x=>\`\<tr data-type="quotes" data-search="${esc([x.customer,x.route,x.method,x.status].join(" ").toLowerCase())}">\<td>${esc(x.customer)}\</td>\<td>${esc(x.route)}\</td>\<td>${esc(x.method)}\</td>\<td>${money(x.amount,x.currency)}\</td>\<td>${esc(x.valid||t("common.notfilled"))}\</td>\<td>${tStatus(x.status)}\</td>\<td>${actionButtons("quotes",x.id)}\</td>\</tr>\`).join("");
+&#x20;return heading(t("quotes.title"),t("quotes.desc"),btnAdd("quotes",t("quotes.addBtn")))
+&#x20;+panel(t("quotes.panelTitle"),filterBar("quotes",t("quotes.searchPlaceholder"))+table([t("quotes.col.customer"),t("quotes.col.route"),t("quotes.col.method"),t("quotes.col.amount"),t("quotes.col.valid"),t("quotes.col.status"),t("quotes.col.actions")],rows));
+}
+
+/\* ================= 订单 ================= \*/
+function ordersPage(){
+&#x20;const revenue=db.orders.reduce((s,x)=>s+(+x.revenue||0),0);
+&#x20;const cost=db.orders.reduce((s,x)=>s+(+x.cost||0),0);
+&#x20;const profit=revenue-cost;
+&#x20;const rows=db.orders.map(x=>{
+&#x20; const p=(+x.revenue||0)-(+x.cost||0);
+&#x20; const margin=(+x.revenue||0)?(p/(+x.revenue||1)\*100):0;
+&#x20; return \`\<tr data-type="orders" data-search="${esc([x.customer,x.route,x.status].join(" ").toLowerCase())}">\<td>${esc(x.customer)}\</td>\<td>${esc(x.route)}\</td>\<td>${money(x.revenue,x.currency)}\</td>\<td>${money(x.cost,x.currency)}\</td>\<td>\<strong>${money(p,x.currency)}\</strong>\</td>\<td>${margin.toFixed(1)}%\</td>\<td>${tStatus(x.status)}\</td>\<td>${actionButtons("orders",x.id)}\</td>\</tr>\`;
+&#x20;}).join("");
+&#x20;return heading(t("orders.title"),t("orders.desc"),btnAdd("orders",t("orders.addBtn")))
+&#x20;+\`\<div class="stats">${stat(t("orders.stat.count"),db.orders.length,t("orders.stat.countDesc"))}${stat(t("orders.stat.revenue"),money(revenue),t("orders.stat.revenueDesc"))}${stat(t("orders.stat.cost"),money(cost),t("orders.stat.costDesc"))}${stat(t("orders.stat.profit"),money(profit),t("orders.stat.profitDesc"))}\</div>\`
+&#x20;+panel(t("orders.panelTitle"),filterBar("orders",t("orders.searchPlaceholder"))+table([t("orders.col.customer"),t("orders.col.route"),t("orders.col.revenue"),t("orders.col.cost"),t("orders.col.profit"),t("orders.col.margin"),t("orders.col.status"),t("orders.col.actions")],rows))
+&#x20;+\`\<div class="note">${t("orders.note")}\</div>\`;
+}
+
+/\* ================= 多语言邮件助手 ================= \*/
 const emailTemplates = {
-  en: {
-    inquiry: `Subject: Re: Your Logistics Inquiry\n\nHi {name},\n\nI hope this email finds you well.\n\nThank you for contacting Morenice Supply Chain Management Co., Ltd. We can assist with supplier collection, warehouse consolidation, export arrangements and international shipping solutions tailored to your requirements.\n\nRegarding your inquiry, {details}.\n\nPlease let me know if you have any questions.\n\nBest regards,\nMorenice Supply Chain Team`,
-    quote: `Subject: Logistics Quotation\n\nHi {name},\n\nI hope this email finds you well.\n\nPlease find our proposed shipping details below:\n\n{details}\n\nThe final cost is subject to confirmation of the cargo details, shipping schedule and applicable charges.\n\nPlease let me know if you have any questions.\n\nBest regards,\nMorenice Supply Chain Team`,
-    followup: `Subject: Following Up\n\nHi {name},\n\nI hope you are well.\n\nI am following up regarding {details}.\n\nPlease let me know if there are any updates or if you need further information from our side.\n\nThank you, and I look forward to hearing from you.\n\nBest regards,\nMorenice Supply Chain Team`,
-    shipment: `Subject: Shipment Update\n\nHi {name},\n\nI hope you are doing well!\n\nHere is the latest shipment update:\n\n{details}\n\nWe will continue monitoring the shipment and keep you informed of further progress.\n\nBest regards,\nMorenice Supply Chain Team`,
-    documents: `Subject: Confirmation of Shipping Documents\n\nHi {name},\n\nI hope this email finds you well.\n\nTo proceed with the shipping arrangements, could you please confirm the following details?\n\n{details}\n\nPlease share any available product specifications, MSDS or relevant test reports where applicable.\n\nThank you for your cooperation.\n\nBest regards,\nMorenice Supply Chain Team`
-  },
-  es: {
-    inquiry: `Asunto: Re: Su consulta logística\n\nHola {name},\n\nEspero que se encuentre bien.\n\nGracias por contactar con Morenice Supply Chain Management Co., Ltd. Podemos ayudar con la recogida de proveedores, consolidación en almacén, trámites de exportación y soluciones de envío internacional adaptadas a sus necesidades.\n\nCon respecto a su consulta, {details}.\n\nPor favor, avíseme si tiene alguna pregunta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
-    quote: `Asunto: Cotización de logística\n\nHola {name},\n\nEspero que se encuentre bien.\n\nA continuación encontrará los detalles de envío propuestos:\n\n{details}\n\nEl costo final está sujeto a la confirmación de los detalles de la carga, el calendario de envío y los cargos aplicables.\n\nPor favor, avíseme si tiene alguna pregunta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
-    followup: `Asunto: Seguimiento\n\nHola {name},\n\nEspero que esté bien.\n\nMe pongo en contacto para hacer un seguimiento de {details}.\n\nPor favor, infórmeme si hay alguna novedad o si necesita más información de nuestra parte.\n\nGracias, y espero su respuesta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
-    shipment: `Asunto: Actualización del envío\n\nHola {name},\n\n¡Espero que esté bien!\n\nAquí está la última actualización del envío:\n\n{details}\n\nContinuaremos monitoreando el envío y le mantendremos informado de cualquier progreso.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
-    documents: `Asunto: Confirmación de documentos de envío\n\nHola {name},\n\nEspero que se encuentre bien.\n\nPara proceder con los arreglos de envío, ¿podría confirmar los siguientes detalles?\n\n{details}\n\nPor favor, comparta las especificaciones del producto, MSDS o informes de prueba relevantes cuando corresponda.\n\nGracias por su cooperación.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`
-  },
-  ar: {
-    inquiry: `الموضوع: رد: استفسارك اللوجستي\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nشكراً لتواصلك مع Morenice Supply Chain Management Co., Ltd. يمكننا المساعدة في جمع الموردين، وتوحيد المستودعات، وترتيبات التصدير، وحلول الشحن الدولي المصممة خصيصاً لتلبية متطلباتك.\n\nبخصوص استفسارك، {details}.\n\nيرجى إخباري إذا كان لديك أي أسئلة.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
-    quote: `الموضوع: عرض أسعار الشحن\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nيرجى الاطلاع على تفاصيل الشحن المقترحة أدناه:\n\n{details}\n\nالتكلفة النهائية تخضع لتأكيد تفاصيل البضاعة، وجدول الشحن، والرسوم المطبقة.\n\nيرجى إخباري إذا كان لديك أي أسئلة.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
-    followup: `الموضوع: متابعة\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nأتابع معك بخصوص {details}.\n\nيرجى إخباري إذا كان هناك أي تحديثات أو إذا كنت بحاجة إلى مزيد من المعلومات من جانبنا.\n\nشكراً لك، وأتطلع إلى ردك.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
-    shipment: `الموضوع: تحديث الشحنة\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير!\n\nإليك أحدث تحديث للشحنة:\n\n{details}\n\nسنستمر في مراقبة الشحنة وإبقائك على اطلاع بأي تقدم إضافي.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
-    documents: `الموضوع: تأكيد مستندات الشحن\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nللمضي قدماً في ترتيبات الشحن، هل يمكنك تأكيد التفاصيل التالية؟\n\n{details}\n\nيرجى مشاركة أي مواصفات للمنتج أو MSDS أو تقارير اختبار ذات صلة عند الاقتضاء.\n\nشكراً لتعاونك.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`
-  },
-  zh: {
-    inquiry: `主题：回复：您的物流询盘\n\n您好 {name}，\n\n希望您一切顺利。\n\n感谢您联系 Morenice Supply Chain Management Co., Ltd.。我们可以根据您的需求，协助处理供应商集货、仓库拼箱、出口安排及国际海运方案。\n\n关于您的询盘，{details}。\n\n如有任何问题，请随时告知。\n\n此致，\nMorenice 供应链团队`,
-    quote: `主题：物流报价\n\n您好 {name}，\n\n希望您一切顺利。\n\n请查收以下建议的运输详情：\n\n{details}\n\n最终费用以货物详情、船期及相关附加费确认为准。\n\n如有任何问题，请随时告知。\n\n此致，\nMorenice 供应链团队`,
-    followup: `主题：跟进\n\n您好 {name}，\n\n希望您一切顺利。\n\n我在此跟进 {details} 的进展情况。\n\n请告知是否有任何更新，或者是否需要我方提供更多信息。\n\n感谢您，期待您的回复。\n\n此致，\nMorenice 供应链团队`,
-    shipment: `主题：货物运输更新\n\n您好 {name}，\n\n希望您一切顺利！\n\n以下是最新的货物运输更新：\n\n{details}\n\n我们将继续跟踪货物，并随时向您通报任何进展。\n\n此致，\nMorenice 供应链团队`,
-    documents: `主题：确认运输文件\n\n您好 {name}，\n\n希望您一切顺利。\n\n为了推进运输安排，请您确认以下信息：\n\n{details}\n\n如有，请提供产品规格、MSDS或相关测试报告。\n\n感谢您的配合。\n\n此致，\nMorenice 供应链团队`
-  }
+&#x20; en: {
+&#x20;   inquiry: \`Subject: Re: Your Logistics Inquiry\n\nHi {name},\n\nI hope this email finds you well.\n\nThank you for contacting Morenice Supply Chain Management Co., Ltd. We can assist with supplier collection, warehouse consolidation, export arrangements and international shipping solutions tailored to your requirements.\n\nRegarding your inquiry, {details}.\n\nPlease let me know if you have any questions.\n\nBest regards,\nMorenice Supply Chain Team\`,
+&#x20;   quote: \`Subject: Logistics Quotation\n\nHi {name},\n\nI hope this email finds you well.\n\nPlease find our proposed shipping details below:\n\n{details}\n\nThe final cost is subject to confirmation of the cargo details, shipping schedule and applicable charges.\n\nPlease let me know if you have any questions.\n\nBest regards,\nMorenice Supply Chain Team\`,
+&#x20;   followup: \`Subject: Following Up\n\nHi {name},\n\nI hope you are well.\n\nI am following up regarding {details}.\n\nPlease let me know if there are any updates or if you need further information from our side.\n\nThank you, and I look forward to hearing from you.\n\nBest regards,\nMorenice Supply Chain Team\`,
+&#x20;   shipment: \`Subject: Shipment Update\n\nHi {name},\n\nI hope you are doing well!\n\nHere is the latest shipment update:\n\n{details}\n\nWe will continue monitoring the shipment and keep you informed of further progress.\n\nBest regards,\nMorenice Supply Chain Team\`,
+&#x20;   documents: \`Subject: Confirmation of Shipping Documents\n\nHi {name},\n\nI hope this email finds you well.\n\nTo proceed with the shipping arrangements, could you please confirm the following details?\n\n{details}\n\nPlease share any available product specifications, MSDS or relevant test reports where applicable.\n\nThank you for your cooperation.\n\nBest regards,\nMorenice Supply Chain Team\`
+&#x20; },
+&#x20; es: {
+&#x20;   inquiry: \`Asunto: Re: Su consulta logística\n\nHola {name},\n\nEspero que se encuentre bien.\n\nGracias por contactar con Morenice Supply Chain Management Co., Ltd. Podemos ayudar con la recogida de proveedores, consolidación en almacén, trámites de exportación y soluciones de envío internacional adaptadas a sus necesidades.\n\nCon respecto a su consulta, {details}.\n\nPor favor, avíseme si tiene alguna pregunta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain\`,
+&#x20;   quote: \`Asunto: Cotización de logística\n\nHola {name},\n\nEspero que se encuentre bien.\n\nA continuación encontrará los detalles de envío propuestos:\n\n{details}\n\nEl costo final está sujeto a la confirmación de los detalles de la carga, el calendario de envío y los cargos aplicables.\n\nPor favor, avíseme si tiene alguna pregunta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain\`,
+&#x20;   followup: \`Asunto: Seguimiento\n\nHola {name},\n\nEspero que esté bien.\n\nMe pongo en contacto para hacer un seguimiento de {details}.\n\nPor favor, infórmeme si hay alguna novedad o si necesita más información de nuestra parte.\n\nGracias, y espero su respuesta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain\`,
+&#x20;   shipment: \`Asunto: Actualización del envío\n\nHola {name},\n\n¡Espero que esté bien!\n\nAquí está la última actualización del envío:\n\n{details}\n\nContinuaremos monitoreando el envío y le mantendremos informado de cualquier progreso.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain\`,
+&#x20;   documents: \`Asunto: Confirmación de documentos de envío\n\nHola {name},\n\nEspero que se encuentre bien.\n\nPara proceder con los arreglos de envío, ¿podría confirmar los siguientes detalles?\n\n{details}\n\nPor favor, comparta las especificaciones del producto, MSDS o informes de prueba relevantes cuando corresponda.\n\nGracias por su cooperación.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain\`
+&#x20; },
+&#x20; ar: {
+&#x20;   inquiry: \`الموضوع: رد: استفسارك اللوجستي\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nشكراً لتواصلك مع Morenice Supply Chain Management Co., Ltd. يمكننا المساعدة في جمع الموردين، وتوحيد المستودعات، وترتيبات التصدير، وحلول الشحن الدولي المصممة خصيصاً لتلبية متطلباتك.\n\nبخصوص استفسارك، {details}.\n\nيرجى إخباري إذا كان لديك أي أسئلة.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain\`,
+&#x20;   quote: \`الموضوع: عرض أسعار الشحن\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nيرجى الاطلاع على تفاصيل الشحن المقترحة أدناه:\n\n{details}\n\nالتكلفة النهائية تخضع لتأكيد تفاصيل البضاعة، وجدول الشحن، والرسوم المطبقة.\n\nيرجى إخباري إذا كان لديك أي أسئلة.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain\`,
+&#x20;   followup: \`الموضوع: متابعة\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nأتابع معك بخصوص {details}.\n\nيرجى إخباري إذا كان هناك أي تحديثات أو إذا كنت بحاجة إلى مزيد من المعلومات من جانبنا.\n\nشكراً لك، وأتطلع إلى ردك.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain\`,
+&#x20;   shipment: \`الموضوع: تحديث الشحنة\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير!\n\nإليك أحدث تحديث للشحنة:\n\n{details}\n\nسنستمر في مراقبة الشحنة وإبقائك على اطلاع بأي تقدم إضافي.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain\`,
+&#x20;   documents: \`الموضوع: تأكيد مستندات الشحن\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nللمضي قدماً في ترتيبات الشحن، هل يمكنك تأكيد التفاصيل التالية؟\n\n{details}\n\nيرجى مشاركة أي مواصفات للمنتج أو MSDS أو تقارير اختبار ذات صلة عند الاقتضاء.\n\nشكراً لتعاونك.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain\`
+&#x20; },
+&#x20; zh: {
+&#x20;   inquiry: \`主题：回复：您的物流询盘\n\n您好 {name}，\n\n希望您一切顺利。\n\n感谢您联系 Morenice Supply Chain Management Co., Ltd.。我们可以根据您的需求，协助处理供应商集货、仓库拼箱、出口安排及国际海运方案。\n\n关于您的询盘，{details}。\n\n如有任何问题，请随时告知。\n\n此致，\nMorenice 供应链团队\`,
+&#x20;   quote: \`主题：物流报价\n\n您好 {name}，\n\n希望您一切顺利。\n\n请查收以下建议的运输详情：\n\n{details}\n\n最终费用以货物详情、船期及相关附加费确认为准。\n\n如有任何问题，请随时告知。\n\n此致，\nMorenice 供应链团队\`,
+&#x20;   followup: \`主题：跟进\n\n您好 {name}，\n\n希望您一切顺利。\n\n我在此跟进 {details} 的进展情况。\n\n请告知是否有任何更新，或者是否需要我方提供更多信息。\n\n感谢您，期待您的回复。\n\n此致，\nMorenice 供应链团队\`,
+&#x20;   shipment: \`主题：货物运输更新\n\n您好 {name}，\n\n希望您一切顺利！\n\n以下是最新的货物运输更新：\n\n{details}\n\n我们将继续跟踪货物，并随时向您通报任何进展。\n\n此致，\nMorenice 供应链团队\`,
+&#x20;   documents: \`主题：确认运输文件\n\n您好 {name}，\n\n希望您一切顺利。\n\n为了推进运输安排，请您确认以下信息：\n\n{details}\n\n如有，请提供产品规格、MSDS或相关测试报告。\n\n感谢您的配合。\n\n此致，\nMorenice 供应链团队\`
+&#x20; }
 };
 
 function emailPage(){
- return heading("多语言邮件助手","选择目标语言，生成商务邮件草稿；支持中英西阿四种语言")
- +`<div class="panel"><form id="emailForm">
- <div class="form-grid">
- <div class="field"><label>客户姓名 (Name)</label><input name="customer" placeholder="例如 Maria"></div>
- <div class="field"><label>客户国家 (Country) - 可辅助判断语言</label><select name="country" onchange="autoSelectLang(this.value)">
-    <option value="en">美国 / 英国 / 其他英语国家</option>
-    <option value="es">西班牙 / 拉美国家</option>
-    <option value="ar">中东 / 阿拉伯国家</option>
-    <option value="zh">中国 / 华人客户</option>
- </select></div>
- <div class="field"><label>目标语言 (Target Language)</label><select name="targetLang" id="targetLang">
-    <option value="en">英语 (English)</option>
-    <option value="es">西班牙语 (Español)</option>
-    <option value="ar">阿拉伯语 (العربية)</option>
-    <option value="zh">中文 (中文)</option>
- </select></div>
- <div class="field"><label>邮件场景</label><select name="scenario"><option value="inquiry">回复新询盘</option><option value="quote">发送物流报价</option><option value="followup">跟进客户</option><option value="shipment">更新运输进度</option><option value="documents">确认文件资料</option></select></div>
- <div class="field full"><label>货物 / 路线 / 关键信息 (中文输入即可)</label><textarea name="details" placeholder="例如：6家供应商货物已收齐，正在集货，预计后天装柜。"></textarea></div>
- </div>
- <button class="btn primary" type="submit">生成目标语言草稿 + 中文核对版</button>
- </form></div>
- <div class="panel"><div class="panel-head"><h2>邮件草稿 (多语言对照)</h2><button class="btn" onclick="copyDraft()">复制邮件</button></div><textarea id="emailOutput" style="min-height:320px" dir="auto" placeholder="生成的邮件会显示在这里，你可以继续编辑。"></textarea><div class="muted">提示：由于是纯前端页面，关键信息不会自动机翻，请手动核对并微调草稿中的具体数字和地名。</div></div>`;
+&#x20;return heading(t("email.title"),t("email.desc"))
+&#x20;+\`\<div class="panel">\<form id="emailForm">
+&#x20;\<div class="form-grid">
+&#x20;\<div class="field">\<label>${t("email.customerName")}\</label>\<input name="customer" placeholder="${t("email.customerNamePlaceholder")}">\</div>
+&#x20;\<div class="field">\<label>${t("email.country")}\</label>\<select name="country" onchange="autoSelectLang(this.value)">
+&#x20;   \<option value="en">${t("email.countryOption.en")}\</option>
+&#x20;   \<option value="es">${t("email.countryOption.es")}\</option>
+&#x20;   \<option value="ar">${t("email.countryOption.ar")}\</option>
+&#x20;   \<option value="zh">${t("email.countryOption.zh")}\</option>
+&#x20;\</select>\</div>
+&#x20;\<div class="field">\<label>${t("email.targetLang")}\</label>\<select name="targetLang" id="targetLang">
+&#x20;   \<option value="en">English\</option>
+&#x20;   \<option value="es">Español\</option>
+&#x20;   \<option value="ar">العربية\</option>
+&#x20;   \<option value="zh">中文\</option>
+&#x20;\</select>\</div>
+&#x20;\<div class="field">\<label>${t("email.scenario")}\</label>\<select name="scenario">
+&#x20;   \<option value="inquiry">${t("email.scenario.inquiry")}\</option>
+&#x20;   \<option value="quote">${t("email.scenario.quote")}\</option>
+&#x20;   \<option value="followup">${t("email.scenario.followup")}\</option>
+&#x20;   \<option value="shipment">${t("email.scenario.shipment")}\</option>
+&#x20;   \<option value="documents">${t("email.scenario.documents")}\</option>
+&#x20;\</select>\</div>
+&#x20;\<div class="field full">\<label>${t("email.details")}\</label>\<textarea name="details" placeholder="${t("email.detailsPlaceholder")}">\</textarea>\</div>
+&#x20;\</div>
+&#x20;\<button class="btn primary" type="submit">${t("email.generate")}\</button>
+&#x20;\</form>\</div>
+&#x20;\<div class="panel">\<div class="panel-head">\<h2>${t("email.draftTitle")}\</h2>\<button class="btn" onclick="copyDraft()">${t("email.copy")}\</button>\</div>\<textarea id="emailOutput" style="min-height:320px" dir="auto" placeholder="${t("email.draftPlaceholder")}">\</textarea>\<div class="muted">${t("email.tip")}\</div>\</div>\`;
 }
-
-function autoSelectLang(val){
- document.getElementById("targetLang").value = val;
-}
-
+function autoSelectLang(val){ document.getElementById("targetLang").value = val; }
 function copyDraft(){
- const value=$("emailOutput").value;
- if(!value.trim()){alert("请先生成或填写邮件草稿。");return}
- if(navigator.clipboard&&window.isSecureContext){
-  navigator.clipboard.writeText(value).then(()=>alert("已复制邮件草稿")).catch(()=>fallbackCopy(value));
- }else fallbackCopy(value);
+&#x20;const value=$("emailOutput").value;
+&#x20;if(!value.trim()){ alert(t("alert.copyNoContent")); return; }
+&#x20;if(navigator.clipboard&&window\.isSecureContext){
+&#x20; navigator.clipboard.writeText(value).then(()=>alert(t("alert.copied"))).catch(()=>fallbackCopy(value));
+&#x20;}else fallbackCopy(value);
 }
 function fallbackCopy(value){
- const t=document.createElement("textarea");t.value=value;document.body.appendChild(t);t.select();
- try{document.execCommand("copy");alert("复制操作已执行")}catch(e){alert("复制失败，请长按文本手动复制")}
- t.remove();
+&#x20;const t2=document.createElement("textarea"); t2.value=value; document.body.appendChild(t2); t2.select();
+&#x20;try{ document.execCommand("copy"); alert(t("alert.copied")); }catch(e){ alert(t("alert.copyFailed")); }
+&#x20;t2.remove();
 }
 
-document.addEventListener("submit",e=>{
- if(e.target.id!=="emailForm")return;
- e.preventDefault();
- const formData = new FormData(e.target);
- const d = Object.fromEntries(formData.entries());
- 
- const name = d.customer.trim() || "there";
- const details = d.details.trim() || "the shipment requirements";
- const targetLang = d.targetLang || "en";
- const scenario = d.scenario;
- 
- const template = emailTemplates[targetLang][scenario];
- if (!template) return;
-
- // 替换模板变量
- let draft = template.replace(/{name}/g, name).replace(/{details}/g, details);
-
- // 如果目标语言不是中文，生成中文核对版附加在下面
- if (targetLang !== "zh") {
-   const zhTemplate = emailTemplates["zh"][scenario];
-   const zhRef = zhTemplate.replace(/{name}/g, name).replace(/{details}/g, details);
-   draft += "\n\n----------------\n【中文核对版】\n" + zhRef;
- }
-
- $("emailOutput").value = draft;
-});
-// ---------------- 多语言邮件助手结束 ----------------
-
+/\* ================= 数据管理 ================= \*/
 function settingsPage(){
- return heading("数据管理","备份、恢复或清空当前浏览器中的测试数据")
- +panel("数据备份",`<p>建议在更换手机、清理浏览器数据或修改代码前导出备份。</p><div class="actions"><button class="btn primary" onclick="exportData()">导出 JSON 备份</button><button class="btn" onclick="exportCSV()">导出客户 CSV</button><button class="btn" onclick="$('importFile').click()">导入 JSON 备份</button><input id="importFile" class="hidden" type="file" accept=".json,application/json" onchange="importData(event)"></div>`)
- +panel("数据状态",`<p>客户：${db.leads.length} 条</p><p>跟进：${db.followups.length} 条</p><p>报价：${db.quotes.length} 条</p><p>订单：${db.orders.length} 条</p><div class="note">这些数据保存在当前浏览器的 localStorage 中。GitHub Pages 不会自动同步不同设备之间的数据。</div><button class="btn danger" onclick="clearData()">清空所有测试数据</button>`);
+&#x20;return heading(t("settings.title"),t("settings.desc"))
+&#x20;+panel(t("settings.backupTitle"),\`\<p>${t("settings.backupDesc")}\</p>\<div class="actions">\<button class="btn primary" onclick="exportData()">${t("settings.exportJson")}\</button>\<button class="btn" onclick="exportCSV()">${t("settings.exportCsv")}\</button>\<button class="btn" onclick="$('importFile').click()">${t("settings.importJson")}\</button>\<input id="importFile" class="hidden" type="file" accept=".json,application/json" onchange="importData(event)">\</div>\`)
+&#x20;+panel(t("settings.statusTitle"),\`\<p>${t("settings.statusLeads")}: ${db.leads.length}\</p>\<p>${t("settings.statusFollowups")}: ${db.followups.length}\</p>\<p>${t("settings.statusQuotes")}: ${db.quotes.length}\</p>\<p>${t("settings.statusOrders")}: ${db.orders.length}\</p>\<div class="note">${t("settings.statusNote")}\</div>\<button class="btn danger" onclick="clearData()">${t("settings.clear")}\</button>\`);
 }
 
+/\* ================= 表单 schema ================= \*/
 const schemas={
- leads:{title:"客户询盘",fields:[
-  ["name","客户姓名","text",true],["company","公司名称","text"],["country","国家 / 地区","text"],["email","邮箱","email"],["phone","WhatsApp / 电话","text"],["product","货物类型","text"],["route","运输路线","text"],["method","运输方式 / 条款","text"],["volume","体积 CBM","number"],["status","询盘状态","select",true,["新询盘","已联系","报价中","等待回复","已成交","已关闭"]],["nextDate","下次跟进日期","date"],["notes","需求与备注","textarea"]
- ]},
- followups:{title:"跟进任务",fields:[
-  ["customer","客户姓名 / 公司","text",true],["date","计划跟进日期","date",true],["note","跟进内容","textarea",true],["status","任务状态","select",true,["待跟进","已完成","已取消"]]
- ]},
- quotes:{title:"物流报价",fields:[
-  ["customer","客户姓名 / 公司","text",true],["route","运输路线","text",true],["method","运输方式 / 条款","text"],["amount","客户报价金额","number",true],["currency","币种","select",true,["USD","EUR","CNY","GBP","CHF"]],["valid","报价有效期","date"],["status","报价状态","select",true,["草稿","已发送","待确认","已接受","已失效"]],["notes","费用构成 / 备注","textarea"]
- ]},
- orders:{title:"订单利润",fields:[
-  ["customer","客户姓名 / 公司","text",true],["route","运输路线","text"],["revenue","订单收入","number",true],["cost","订单总成本","number",true],["currency","币种","select",true,["USD","EUR","CNY","GBP","CHF"]],["status","订单状态","select",true,["待出运","运输中","已完成","已取消"]],["notes","订单备注","textarea"]
- ]}
+&#x20;leads:{titleKey:"leads.title",fields:[
+&#x20; ["name","field.name","text",true],["company","field.company","text"],["country","field.country","text"],["email","field.email","email"],["phone","field.phone","text"],["product","field.product","text"],["route","field.route","text"],["method","field.method","text"],["volume","field.volume","number"],["status","field.status","select",true,["新询盘","已联系","报价中","等待回复","已成交","已关闭"]],["nextDate","field.nextDate","date"],["notes","field.notes","textarea"]
+&#x20;]},
+&#x20;followups:{titleKey:"followups.title",fields:[
+&#x20; ["customer","field.customer","text",true],["date","field.date","date",true],["note","field.note","textarea",true],["status","field.taskStatus","select",true,["待跟进","已完成","已取消"]]
+&#x20;]},
+&#x20;quotes:{titleKey:"quotes.title",fields:[
+&#x20; ["customer","field.customer","text",true],["route","field.route","text",true],["method","field.method","text"],["amount","field.quoteAmount","number",true],["currency","field.currency","select",true,["USD","EUR","CNY","GBP","CHF"]],["valid","field.valid","date"],["status","field.quoteStatus","select",true,["草稿","已发送","待确认","已接受","已失效"]],["notes","field.quoteNotes","textarea"]
+&#x20;]},
+&#x20;orders:{titleKey:"orders.title",fields:[
+&#x20; ["customer","field.customer","text",true],["route","field.route","text"],["revenue","field.orderRevenue","number",true],["cost","field.orderCost","number",true],["currency","field.currency","select",true,["USD","EUR","CNY","GBP","CHF"]],["status","field.orderStatus","select",true,["待出运","运输中","已完成","已取消"]],["notes","field.orderNotes","textarea"]
+&#x20;]}
 };
+
 function openEditor(type,id){
- const schema=schemas[type];
- if(!schema)return;
- const existing=id?db[type].find(x=>x.id===id):null;
- editContext={type,id:id||null};
- $("modalTitle").textContent=(existing?"编辑":"新增")+schema.title;
- $("modalBody").innerHTML=schema.fields.map(([key,label,kind,required,options])=>{
-  const value=existing?.[key]??(key==="status"?({"leads":"新询盘","followups":"待跟进","quotes":"草稿","orders":"待出运"}[type]):key==="currency"?"USD":"");
-  let control="";
-  if(kind==="select"){
-   control=`<select name="${key}" ${required?"required":""}>${options.map(o=>`<option ${value===o?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
-  }else if(kind==="textarea"){
-   control=`<textarea name="${key}" ${required?"required":""}>${esc(value)}</textarea>`;
-  }else{
-   control=`<input name="${key}" type="${kind}" value="${esc(value)}" ${required?"required":""} ${kind==="number"?'min="0" step="any"':""}>`;
-  }
-  return `<div class="field ${kind==="textarea"?"full":""}"><label>${label}${required?" *":""}</label>${control}</div>`;
- }).join("");
- $("modal").showModal();
+&#x20;const schema=schemas[type];
+&#x20;if(!schema)return;
+&#x20;const existing=id?db[type].find(x=>x.id===id):null;
+&#x20;editContext={type,id:id||null};
+&#x20;$("modalTitle").textContent=(existing?t("modal.edit"):t("modal.new"))+" · "+t(schema.titleKey);
+&#x20;$("modalBody").innerHTML=schema.fields.map(([key,labelKey,kind,required,options])=>{
+&#x20; const value=existing?.[key]??(key==="status"?({"leads":"新询盘","followups":"待跟进","quotes":"草稿","orders":"待出运"}[type]):key==="currency"?"USD":"");
+&#x20; let control="";
+&#x20; if(kind==="select"){
+&#x20;  control=\`\<select name="${key}" ${required?"required":""}>${options.map(o=>\`\<option value="${esc(o)}" ${value===o?"selected":""}>${tStatus(o)||o}\</option>\`).join("")}\</select>\`;
+&#x20; }else if(kind==="textarea"){
+&#x20;  control=\`\<textarea name="${key}" ${required?"required":""}>${esc(value)}\</textarea>\`;
+&#x20; }else{
+&#x20;  control=\`\<input name="${key}" type="${kind}" value="${esc(value)}" ${required?"required":""} ${kind==="number"?'min="0" step="any"':""}>\`;
+&#x20; }
+&#x20; return \`\<div class="field ${kind==="textarea"?"full":""}">\<label>${t(labelKey)}${required?" \*":""}\</label>${control}\</div>\`;
+&#x20;}).join("");
+&#x20;$("modal").showModal();
 }
-function closeModal(){$("modal").close();editContext=null}
-$("editForm").addEventListener("submit",e=>{
- e.preventDefault();
- if(!editContext)return;
- const {type,id}=editContext;
- const data=Object.fromEntries(new FormData(e.currentTarget).entries());
- if(type==="orders"||type==="quotes"||type==="leads") {
-  if(data.amount!==undefined)data.amount=Number(data.amount)||0;
-  if(data.revenue!==undefined)data.revenue=Number(data.revenue)||0;
-  if(data.cost!==undefined)data.cost=Number(data.cost)||0;
-  if(data.volume!==undefined)data.volume=Number(data.volume)||0;
- }
- if(id){
-  const i=db[type].findIndex(x=>x.id===id);
-  if(i>=0)db[type][i]={...db[type][i],...data};
- }else{
-  data.id=crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random();
-  db[type].push(data);
- }
- if(save()){
-  closeModal();
-  render();
- }
+function closeModal(){ $("modal").close(); editContext=null; }
+
+/\* ================= 邮件发送 ================= \*/
+async function sendInquiryEmail(lead){
+&#x20;if(!MAIL_CONFIG.enabled){ return "disabled"; }
+&#x20;if(!MAIL_CONFIG.web3formsKey || MAIL_CONFIG.web3formsKey.indexOf("在这里填")===0){ return "nokey"; }
+&#x20;const lines=[
+&#x20; "【MORENICE CRM】新询盘",
+&#x20; "------------------------------",
+&#x20; "姓名："+(lead.name||""),
+&#x20; "公司："+(lead.company||""),
+&#x20; "国家/地区："+(lead.country||""),
+&#x20; "邮箱："+(lead.email||""),
+&#x20; "WhatsApp/电话："+(lead.phone||""),
+&#x20; "货物类型："+(lead.product||""),
+&#x20; "运输路线："+(lead.route||""),
+&#x20; "运输方式/条款："+(lead.method||""),
+&#x20; "体积："+(lead.volume||"")+" CBM",
+&#x20; "询盘状态："+(lead.status||""),
+&#x20; "下次跟进："+(lead.nextDate||""),
+&#x20; "需求与备注："+(lead.notes||""),
+&#x20; "------------------------------",
+&#x20; "提交时间："+new Date().toLocaleString("zh-CN"),
+&#x20; "来源页面："+location.href
+&#x20;];
+&#x20;const message=lines.join("\n");
+&#x20;try{
+&#x20; const res=await fetch("[https://api.web3forms.com/submit](https://api.web3forms.com/submit)",{
+&#x20;  method:"POST",
+&#x20;  headers:{"Content-Type":"application/json","Accept":"application/json"},
+&#x20;  body:JSON.stringify({
+&#x20;   access_key: MAIL_CONFIG.web3formsKey,
+&#x20;   subject: "【MORENICE CRM】新询盘 - "+(lead.name||"未命名"),
+&#x20;   from_name: "Morenice CRM",
+&#x20;   replyto: lead.email||"",
+&#x20;   message: message
+&#x20;  })
+&#x20; });
+&#x20; const data=await res.json().catch(()=>({}));
+&#x20; return data.success ? "ok" : "failed";
+&#x20;}catch(e){ console.error(e); return "failed"; }
+}
+
+/\* ================= 表单提交 ================= \*/
+$("editForm").addEventListener("submit",async e=>{
+&#x20;e.preventDefault();
+&#x20;if(!editContext)return;
+&#x20;const {type,id}=editContext;
+&#x20;const data=Object.fromEntries(new FormData(e.currentTarget).entries());
+&#x20;if(type==="orders"||type==="quotes"||type==="leads"){
+&#x20; if(data.amount!==undefined)data.amount=Number(data.amount)||0;
+&#x20; if(data.revenue!==undefined)data.revenue=Number(data.revenue)||0;
+&#x20; if(data.cost!==undefined)data.cost=Number(data.cost)||0;
+&#x20; if(data.volume!==undefined)data.volume=Number(data.volume)||0;
+&#x20;}
+&#x20;let isNew=false;
+&#x20;if(id){
+&#x20; const i=db[type].findIndex(x=>x.id===id);
+&#x20; if(i>=0)db[type][i]={...db[type][i],...data};
+&#x20;}else{
+&#x20; data.id=crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random();
+&#x20; db[type].push(data);
+&#x20; isNew=true;
+&#x20;}
+&#x20;if(save()){
+&#x20; closeModal();
+&#x20; render();
+&#x20; // 新增客户询盘时，自动发邮件到后台
+&#x20; if(type==="leads" && isNew){
+&#x20;  const result=await sendInquiryEmail(data);
+&#x20;  if(result==="ok") alert(t("alert.sendSuccess"));
+&#x20;  else if(result==="disabled") alert(t("alert.sendDisabled"));
+&#x20;  else if(result==="nokey") { /\* 未配置 key 时静默，不发提示 \*/ }
+&#x20;  else alert(t("alert.sendFailed"));
+&#x20; }
+&#x20;}
 });
+
 function removeRecord(type,id){
- if(!confirm("确定删除这条记录？此操作不可撤销。"))return;
- db[type]=db[type].filter(x=>x.id!==id);
- save();render();
+&#x20;if(!confirm(t("common.deleteConfirm")))return;
+&#x20;db[type]=db[type].filter(x=>x.id!==id);
+&#x20;save();render();
 }
-function completeFollowup(id){
- const x=db.followups.find(x=>x.id===id);
- if(x){x.status="已完成";save();render()}
-}
+function completeFollowup(id){ const x=db.followups.find(x=>x.id===id); if(x){x.status="已完成";save();render();} }
 function downloadFile(name,content,type){
- const blob=new Blob([content],{type});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");a.href=url;a.download=name;a.click();
- setTimeout(()=>URL.revokeObjectURL(url),1000);
+&#x20;const blob=new Blob([content],{type});
+&#x20;const url=URL.createObjectURL(blob);
+&#x20;const a=document.createElement("a");a.href=url;a.download=name;a.click();
+&#x20;setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-function exportData(){
- downloadFile("morenice-crm-backup.json",JSON.stringify(db,null,2),"application/json");
-}
-function csvCell(v){return '"'+String(v??"").replace(/"/g,'""')+'"'}
+function exportData(){ downloadFile("morenice-crm-backup.json",JSON.stringify(db,null,2),"application/json"); }
+function csvCell(v){ return '"'+String(v??"").replace(/"/g,'""')+'"'; }
 function exportCSV(){
- const fields=["name","company","country","email","phone","product","route","method","volume","status","nextDate","notes"];
- const csv=[fields.join(","),...db.leads.map(x=>fields.map(k=>csvCell(x[k])).join(","))].join("\r\n");
- downloadFile("morenice-customers.csv","\ufeff"+csv,"text/csv;charset=utf-8");
+&#x20;const fields=["name","company","country","email","phone","product","route","method","volume","status","nextDate","notes"];
+&#x20;const csv=[fields.join(","),...db.leads.map(x=>fields.map(k=>csvCell(x[k])).join(","))].join("\r\n");
+&#x20;downloadFile("morenice-customers.csv","\ufeff"+csv,"text/csv;charset=utf-8");
 }
 function importData(event){
- const file=event.target.files?.[0];
- if(!file)return;
- const reader=new FileReader();
- reader.onload=()=>{
-  try{
-   const obj=JSON.parse(reader.result);
-   if(!obj||!["leads","followups","quotes","orders"].every(k=>Array.isArray(obj[k])))throw Error("格式不正确");
-   if(!confirm("导入将替换当前所有数据，建议先导出备份。继续吗？"))return;
-   db=obj;
-   if(save()){render();alert("数据导入成功")}
-  }catch(e){alert("导入失败：文件格式不正确。")}
-  event.target.value="";
- };
- reader.readAsText(file);
+&#x20;const file=event.target.files?.[0];
+&#x20;if(!file)return;
+&#x20;const reader=new FileReader();
+&#x20;reader.onload=()=>{
+&#x20; try{
+&#x20;  const obj=JSON.parse(reader.result);
+&#x20;  if(!obj||!["leads","followups","quotes","orders"].every(k=>Array.isArray(obj[k]))) throw Error("bad");
+&#x20;  if(!confirm(t("alert.importConfirm")))return;
+&#x20;  db=obj;
+&#x20;  if(save()){ render(); alert(t("alert.importSuccess")); }
+&#x20; }catch(e){ alert(t("alert.importFailed")); }
+&#x20; event.target.value="";
+&#x20;};
+&#x20;reader.readAsText(file);
 }
 function clearData(){
- if(!confirm("确定清空全部客户、跟进、报价和订单数据吗？"))return;
- if(!confirm("请再次确认。建议先导出 JSON 备份。"))return;
- db=emptyDB();save();render();
+&#x20;if(!confirm(t("alert.clear1")))return;
+&#x20;if(!confirm(t("alert.clear2")))return;
+&#x20;db=emptyDB(); save(); render();
 }
+
+/\* ================= 启动 ================= \*/
+applyDir();
 render();
-</script>
-</body>
-</html>
+\</script>
+\</body>
+\</html>
