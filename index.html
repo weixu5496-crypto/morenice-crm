@@ -111,7 +111,7 @@ const navItems = [
  ["followups","跟进提醒","Follow-ups"],
  ["quotes","物流报价","Quotes"],
  ["orders","订单利润","Orders"],
- ["email","邮件助手","Email Assistant"],
+ ["email","多语言邮件助手","Email Assistant"],
  ["settings","数据管理","Data"]
 ];
 const emptyDB = () => ({leads:[],followups:[],quotes:[],orders:[]});
@@ -228,18 +228,109 @@ function ordersPage(){
  +panel("订单明细",filterBar("orders","搜索客户或路线...")+table(["客户","运输路线","收入","成本","毛利","毛利率","状态","操作"],rows))
  +`<div class="note">注意：如果订单使用不同币种，请先统一换算为同一币种再比较总收入和总毛利。本测试版不自动换汇，也不包含税务、应收应付或实际财务账簿功能。</div>`;
 }
+
+// ---------------- 多语言邮件助手开始 ----------------
+const emailTemplates = {
+  en: {
+    inquiry: `Subject: Re: Your Logistics Inquiry\n\nHi {name},\n\nI hope this email finds you well.\n\nThank you for contacting Morenice Supply Chain Management Co., Ltd. We can assist with supplier collection, warehouse consolidation, export arrangements and international shipping solutions tailored to your requirements.\n\nRegarding your inquiry, {details}.\n\nPlease let me know if you have any questions.\n\nBest regards,\nMorenice Supply Chain Team`,
+    quote: `Subject: Logistics Quotation\n\nHi {name},\n\nI hope this email finds you well.\n\nPlease find our proposed shipping details below:\n\n{details}\n\nThe final cost is subject to confirmation of the cargo details, shipping schedule and applicable charges.\n\nPlease let me know if you have any questions.\n\nBest regards,\nMorenice Supply Chain Team`,
+    followup: `Subject: Following Up\n\nHi {name},\n\nI hope you are well.\n\nI am following up regarding {details}.\n\nPlease let me know if there are any updates or if you need further information from our side.\n\nThank you, and I look forward to hearing from you.\n\nBest regards,\nMorenice Supply Chain Team`,
+    shipment: `Subject: Shipment Update\n\nHi {name},\n\nI hope you are doing well!\n\nHere is the latest shipment update:\n\n{details}\n\nWe will continue monitoring the shipment and keep you informed of further progress.\n\nBest regards,\nMorenice Supply Chain Team`,
+    documents: `Subject: Confirmation of Shipping Documents\n\nHi {name},\n\nI hope this email finds you well.\n\nTo proceed with the shipping arrangements, could you please confirm the following details?\n\n{details}\n\nPlease share any available product specifications, MSDS or relevant test reports where applicable.\n\nThank you for your cooperation.\n\nBest regards,\nMorenice Supply Chain Team`
+  },
+  es: {
+    inquiry: `Asunto: Re: Su consulta logística\n\nHola {name},\n\nEspero que se encuentre bien.\n\nGracias por contactar con Morenice Supply Chain Management Co., Ltd. Podemos ayudar con la recogida de proveedores, consolidación en almacén, trámites de exportación y soluciones de envío internacional adaptadas a sus necesidades.\n\nCon respecto a su consulta, {details}.\n\nPor favor, avíseme si tiene alguna pregunta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
+    quote: `Asunto: Cotización de logística\n\nHola {name},\n\nEspero que se encuentre bien.\n\nA continuación encontrará los detalles de envío propuestos:\n\n{details}\n\nEl costo final está sujeto a la confirmación de los detalles de la carga, el calendario de envío y los cargos aplicables.\n\nPor favor, avíseme si tiene alguna pregunta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
+    followup: `Asunto: Seguimiento\n\nHola {name},\n\nEspero que esté bien.\n\nMe pongo en contacto para hacer un seguimiento de {details}.\n\nPor favor, infórmeme si hay alguna novedad o si necesita más información de nuestra parte.\n\nGracias, y espero su respuesta.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
+    shipment: `Asunto: Actualización del envío\n\nHola {name},\n\n¡Espero que esté bien!\n\nAquí está la última actualización del envío:\n\n{details}\n\nContinuaremos monitoreando el envío y le mantendremos informado de cualquier progreso.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`,
+    documents: `Asunto: Confirmación de documentos de envío\n\nHola {name},\n\nEspero que se encuentre bien.\n\nPara proceder con los arreglos de envío, ¿podría confirmar los siguientes detalles?\n\n{details}\n\nPor favor, comparta las especificaciones del producto, MSDS o informes de prueba relevantes cuando corresponda.\n\nGracias por su cooperación.\n\nSaludos cordiales,\nEquipo de Morenice Supply Chain`
+  },
+  ar: {
+    inquiry: `الموضوع: رد: استفسارك اللوجستي\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nشكراً لتواصلك مع Morenice Supply Chain Management Co., Ltd. يمكننا المساعدة في جمع الموردين، وتوحيد المستودعات، وترتيبات التصدير، وحلول الشحن الدولي المصممة خصيصاً لتلبية متطلباتك.\n\nبخصوص استفسارك، {details}.\n\nيرجى إخباري إذا كان لديك أي أسئلة.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
+    quote: `الموضوع: عرض أسعار الشحن\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nيرجى الاطلاع على تفاصيل الشحن المقترحة أدناه:\n\n{details}\n\nالتكلفة النهائية تخضع لتأكيد تفاصيل البضاعة، وجدول الشحن، والرسوم المطبقة.\n\nيرجى إخباري إذا كان لديك أي أسئلة.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
+    followup: `الموضوع: متابعة\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nأتابع معك بخصوص {details}.\n\nيرجى إخباري إذا كان هناك أي تحديثات أو إذا كنت بحاجة إلى مزيد من المعلومات من جانبنا.\n\nشكراً لك، وأتطلع إلى ردك.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
+    shipment: `الموضوع: تحديث الشحنة\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير!\n\nإليك أحدث تحديث للشحنة:\n\n{details}\n\nسنستمر في مراقبة الشحنة وإبقائك على اطلاع بأي تقدم إضافي.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`,
+    documents: `الموضوع: تأكيد مستندات الشحن\n\nمرحباً {name}،\n\nأتمنى أن تكون بخير.\n\nللمضي قدماً في ترتيبات الشحن، هل يمكنك تأكيد التفاصيل التالية؟\n\n{details}\n\nيرجى مشاركة أي مواصفات للمنتج أو MSDS أو تقارير اختبار ذات صلة عند الاقتضاء.\n\nشكراً لتعاونك.\n\nمع أطيب التحيات،\nفريق Morenice Supply Chain`
+  },
+  zh: {
+    inquiry: `主题：回复：您的物流询盘\n\n您好 {name}，\n\n希望您一切顺利。\n\n感谢您联系 Morenice Supply Chain Management Co., Ltd.。我们可以根据您的需求，协助处理供应商集货、仓库拼箱、出口安排及国际海运方案。\n\n关于您的询盘，{details}。\n\n如有任何问题，请随时告知。\n\n此致，\nMorenice 供应链团队`,
+    quote: `主题：物流报价\n\n您好 {name}，\n\n希望您一切顺利。\n\n请查收以下建议的运输详情：\n\n{details}\n\n最终费用以货物详情、船期及相关附加费确认为准。\n\n如有任何问题，请随时告知。\n\n此致，\nMorenice 供应链团队`,
+    followup: `主题：跟进\n\n您好 {name}，\n\n希望您一切顺利。\n\n我在此跟进 {details} 的进展情况。\n\n请告知是否有任何更新，或者是否需要我方提供更多信息。\n\n感谢您，期待您的回复。\n\n此致，\nMorenice 供应链团队`,
+    shipment: `主题：货物运输更新\n\n您好 {name}，\n\n希望您一切顺利！\n\n以下是最新的货物运输更新：\n\n{details}\n\n我们将继续跟踪货物，并随时向您通报任何进展。\n\n此致，\nMorenice 供应链团队`,
+    documents: `主题：确认运输文件\n\n您好 {name}，\n\n希望您一切顺利。\n\n为了推进运输安排，请您确认以下信息：\n\n{details}\n\n如有，请提供产品规格、MSDS或相关测试报告。\n\n感谢您的配合。\n\n此致，\nMorenice 供应链团队`
+  }
+};
+
 function emailPage(){
- return heading("AI 邮件助手","生成可编辑的英文商务邮件草稿；当前版本使用本地模板，不调用 AI 服务")
+ return heading("多语言邮件助手","选择目标语言，生成商务邮件草稿；支持中英西阿四种语言")
  +`<div class="panel"><form id="emailForm">
  <div class="form-grid">
- <div class="field"><label>客户姓名</label><input name="customer" placeholder="例如 Maria"></div>
+ <div class="field"><label>客户姓名 (Name)</label><input name="customer" placeholder="例如 Maria"></div>
+ <div class="field"><label>客户国家 (Country) - 可辅助判断语言</label><select name="country" onchange="autoSelectLang(this.value)">
+    <option value="en">美国 / 英国 / 其他英语国家</option>
+    <option value="es">西班牙 / 拉美国家</option>
+    <option value="ar">中东 / 阿拉伯国家</option>
+    <option value="zh">中国 / 华人客户</option>
+ </select></div>
+ <div class="field"><label>目标语言 (Target Language)</label><select name="targetLang" id="targetLang">
+    <option value="en">英语 (English)</option>
+    <option value="es">西班牙语 (Español)</option>
+    <option value="ar">阿拉伯语 (العربية)</option>
+    <option value="zh">中文 (中文)</option>
+ </select></div>
  <div class="field"><label>邮件场景</label><select name="scenario"><option value="inquiry">回复新询盘</option><option value="quote">发送物流报价</option><option value="followup">跟进客户</option><option value="shipment">更新运输进度</option><option value="documents">确认文件资料</option></select></div>
- <div class="field full"><label>货物 / 路线 / 关键信息</label><textarea name="details" placeholder="例如：6家供应商货物已收齐，正在集货，预计后天装柜。"></textarea></div>
- <div class="field full"><label>语气</label><select name="tone"><option value="professional">专业、简洁</option><option value="friendly">友好自然</option><option value="firm">礼貌但坚定</option></select></div>
- </div><button class="btn primary" type="submit">生成邮件草稿</button>
+ <div class="field full"><label>货物 / 路线 / 关键信息 (中文输入即可)</label><textarea name="details" placeholder="例如：6家供应商货物已收齐，正在集货，预计后天装柜。"></textarea></div>
+ </div>
+ <button class="btn primary" type="submit">生成目标语言草稿 + 中文核对版</button>
  </form></div>
- <div class="panel"><div class="panel-head"><h2>邮件草稿</h2><button class="btn" onclick="copyDraft()">复制邮件</button></div><textarea id="emailOutput" style="min-height:260px" placeholder="生成的邮件会显示在这里，你可以继续编辑。"></textarea><div class="muted">发送前请核对客户姓名、价格、日期、船期和运输条款。</div></div>`;
+ <div class="panel"><div class="panel-head"><h2>邮件草稿 (多语言对照)</h2><button class="btn" onclick="copyDraft()">复制邮件</button></div><textarea id="emailOutput" style="min-height:320px" dir="auto" placeholder="生成的邮件会显示在这里，你可以继续编辑。"></textarea><div class="muted">提示：由于是纯前端页面，关键信息不会自动机翻，请手动核对并微调草稿中的具体数字和地名。</div></div>`;
 }
+
+function autoSelectLang(val){
+ document.getElementById("targetLang").value = val;
+}
+
+function copyDraft(){
+ const value=$("emailOutput").value;
+ if(!value.trim()){alert("请先生成或填写邮件草稿。");return}
+ if(navigator.clipboard&&window.isSecureContext){
+  navigator.clipboard.writeText(value).then(()=>alert("已复制邮件草稿")).catch(()=>fallbackCopy(value));
+ }else fallbackCopy(value);
+}
+function fallbackCopy(value){
+ const t=document.createElement("textarea");t.value=value;document.body.appendChild(t);t.select();
+ try{document.execCommand("copy");alert("复制操作已执行")}catch(e){alert("复制失败，请长按文本手动复制")}
+ t.remove();
+}
+
+document.addEventListener("submit",e=>{
+ if(e.target.id!=="emailForm")return;
+ e.preventDefault();
+ const formData = new FormData(e.target);
+ const d = Object.fromEntries(formData.entries());
+ 
+ const name = d.customer.trim() || "there";
+ const details = d.details.trim() || "the shipment requirements";
+ const targetLang = d.targetLang || "en";
+ const scenario = d.scenario;
+ 
+ const template = emailTemplates[targetLang][scenario];
+ if (!template) return;
+
+ // 替换模板变量
+ let draft = template.replace(/{name}/g, name).replace(/{details}/g, details);
+
+ // 如果目标语言不是中文，生成中文核对版附加在下面
+ if (targetLang !== "zh") {
+   const zhTemplate = emailTemplates["zh"][scenario];
+   const zhRef = zhTemplate.replace(/{name}/g, name).replace(/{details}/g, details);
+   draft += "\n\n----------------\n【中文核对版】\n" + zhRef;
+ }
+
+ $("emailOutput").value = draft;
+});
+// ---------------- 多语言邮件助手结束 ----------------
+
 function settingsPage(){
  return heading("数据管理","备份、恢复或清空当前浏览器中的测试数据")
  +panel("数据备份",`<p>建议在更换手机、清理浏览器数据或修改代码前导出备份。</p><div class="actions"><button class="btn primary" onclick="exportData()">导出 JSON 备份</button><button class="btn" onclick="exportCSV()">导出客户 CSV</button><button class="btn" onclick="$('importFile').click()">导入 JSON 备份</button><input id="importFile" class="hidden" type="file" accept=".json,application/json" onchange="importData(event)"></div>`)
@@ -313,36 +404,6 @@ function completeFollowup(id){
  const x=db.followups.find(x=>x.id===id);
  if(x){x.status="已完成";save();render()}
 }
-function copyDraft(){
- const value=$("emailOutput").value;
- if(!value.trim()){alert("请先生成或填写邮件草稿。");return}
- if(navigator.clipboard&&window.isSecureContext){
-  navigator.clipboard.writeText(value).then(()=>alert("已复制邮件草稿")).catch(()=>fallbackCopy(value));
- }else fallbackCopy(value);
-}
-function fallbackCopy(value){
- const t=document.createElement("textarea");t.value=value;document.body.appendChild(t);t.select();
- try{document.execCommand("copy");alert("复制操作已执行")}catch(e){alert("复制失败，请长按文本手动复制")}
- t.remove();
-}
-document.addEventListener("submit",e=>{
- if(e.target.id!=="emailForm")return;
- e.preventDefault();
- const d=Object.fromEntries(new FormData(e.target).entries());
- const name=d.customer.trim()||"there";
- const details=d.details.trim()||"the shipment requirements";
- const opening=d.tone==="friendly"?"I hope you are doing well!":d.tone==="firm"?"I hope you are well.":"I hope this email finds you well.";
- const endings=d.tone==="firm"?"Please confirm the next steps at your earliest convenience.":"Please let me know if you have any questions.";
- const texts={
- inquiry:`Subject: Re: Your Logistics Inquiry\n\nHi ${name},\n\n${opening}\n\nThank you for contacting Morenice Supply Chain Management Co., Ltd. We can assist with supplier collection, warehouse consolidation, export arrangements and international shipping solutions tailored to your requirements.\n\nRegarding your inquiry, ${details}.\n\n${endings}\n\nBest regards,\nMorenice Supply Chain Team`,
- quote:`Subject: Logistics Quotation\n\nHi ${name},\n\n${opening}\n\nPlease find our proposed shipping details below:\n\n${details}\n\nThe final cost is subject to confirmation of the cargo details, shipping schedule and applicable charges.\n\n${endings}\n\nBest regards,\nMorenice Supply Chain Team`,
- followup:`Subject: Following Up\n\nHi ${name},\n\n${opening}\n\nI am following up regarding ${details}.\n\nPlease let me know if there are any updates or if you need further information from our side.\n\nThank you, and I look forward to hearing from you.\n\nBest regards,\nMorenice Supply Chain Team`,
- shipment:`Subject: Shipment Update\n\nHi ${name},\n\n${opening}\n\nHere is the latest shipment update:\n\n${details}\n\nWe will continue monitoring the shipment and keep you informed of further progress.\n\nBest regards,\nMorenice Supply Chain Team`,
- documents:`Subject: Confirmation of Shipping Documents\n\nHi ${name},\n\n${opening}\n\nTo proceed with the shipping arrangements, could you please confirm the following details?\n\n${details}\n\nPlease share any available product specifications, MSDS or relevant test reports where applicable.\n\nThank you for your cooperation.\n\nBest regards,\nMorenice Supply Chain Team`
- };
- $("emailOutput").value=texts[d.scenario];
-});
-
 function downloadFile(name,content,type){
  const blob=new Blob([content],{type});
  const url=URL.createObjectURL(blob);
