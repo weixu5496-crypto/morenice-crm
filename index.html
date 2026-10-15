@@ -2,25 +2,384 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Morenice CRM</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14243a">
+<title>Morenice CRM | Supply Chain</title>
 <style>
-:root{--blue:#183b66;--bg:#f3f6fa;--line:#e3e8ef;--muted:#667085}
+:root{--navy:#14243a;--blue:#2864dc;--bg:#f4f6fa;--line:#e5e9f0;--text:#202b3c;--muted:#778397;--green:#16845c;--red:#c74747}
 *{box-sizing:border-box}
-body{margin:0;font:15px Arial,"Microsoft YaHei",sans-serif;background:var(--bg);color:#202b3c}
-header{background:var(--blue);color:white;padding:22px 24px}
-header h1{margin:0 0 7px;font-size:24px}
-header p{margin:0;color:#d9e5f4;font-size:13px}
-main{max-width:1200px;margin:auto;padding:20px}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-button{cursor:pointer;border:0;border-radius:7px;padding:10px 14px;background:var(--blue);color:white;font-size:14px}
-button.secondary{background:#e7edf5;color:#243b59}
-button.danger{background:#a52c37}
-nav button.active{background:#d5e5fa;color:#183b66}
-.panel,.stat{background:white;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.stat small{color:var(--muted)}
-.stat strong{display:block;font-size:25px;margin-top:10px}
-h2{font-size:19px;margin:0 0 16px}
-h3{font-size:16px}
-form .fields{display
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex}
+.sidebar{width:225px;background:var(--navy);color:white;padding:25px 14px;flex-shrink:0}
+.brand{font-size:21px;font-weight:800;padding:0 12px}
+.brand small{display:block;font-size:11px;color:#a9bad0;font-weight:400;margin-top:7px;letter-spacing:1px}
+.nav{margin-top:32px}
+.nav button{width:100%;border:0;color:#c1ccdc;background:transparent;text-align:left;padding:13px 14px;border-radius:9px;margin:3px 0}
+.nav button.active,.nav button:hover{background:#293c57;color:white}
+.side-note{font-size:11px;color:#9daec4;line-height:1.8;padding:20px 12px}
+main{flex:1;min-width:0}
+.topbar{height:66px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.topbar strong{font-size:16px}
+.content{padding:27px;max-width:1450px;margin:auto}
+h1{font-size:25px;margin:0 0 8px}
+h2{font-size:17px;margin:0}
+.muted{color:var(--muted);font-size:12px;line-height:1.7}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin:22px 0}
+.stat,.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:20px}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-value{font-size:29px;font-weight:750;margin:12px 0 5px}
+.panel{margin-bottom:18px;overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
+.btn{border:1px solid var(--line);background:white;border-radius:7px;padding:9px 13px;color:var(--text)}
+.btn.primary{background:var(--blue);color:white;border-color:var(--blue)}
+.btn.danger{color:var(--red)}
+.btn.small{padding:5px 8px;font-size:12px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+input,select,textarea{width:100%;border:1px solid #dce2eb;border-radius:7px;padding:10px;background:white;color:var(--text);min-width:0}
+textarea{resize:vertical;min-height:85px}
+label{display:block;font-size:12px;color:#566276;margin-bottom:6px}
+.field{margin-bottom:15px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+.full{grid-column:1/-1}
+.search{max-width:310px}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:650px}
+th,td{text-align:left;padding:13px 12px;border-bottom:1px solid #edf0f4;vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600;background:#fafbfd}
+td{font-size:13px;line-height:1.65}
+.badge{display:inline-block;background:#edf3ff;color:#2455ad;border-radius:5px;padding:3px 7px;font-size:11px}
+.badge.green{background:#e8f7ef;color:#18744e}
+.badge.orange{background:#fff3df;color:#98600a}
+.empty{text-align:center;padding:35px;color:var(--muted)}
+.hidden{display:none!important}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.note{padding:12px 14px;background:#f0f5ff;border-radius:8px;color:#37547f;font-size:12px;line-height:1.8;margin:14px 0}
+footer{text-align:center;color:#99a3b3;font-size:11px;padding:20px}
+.mobile-nav{display:none}
+dialog{border:0;border-radius:14px;padding:0;width:min(620px,calc(100% - 24px));max-height:90vh;box-shadow:0 18px 70px #14243a35}
+dialog::backdrop{background:#14243a80}
+.modal-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-body{padding:22px;overflow-y:auto;max-height:70vh}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+@media(max-width:850px){
+ .sidebar{display:none}.app{display:block}.topbar{padding:0 17px}
+ .content{padding:19px 14px 85px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .stat{padding:15px}.stat-value{font-size:25px}.two-col{grid-template-columns:1fr}
+ .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--line);z-index:5;overflow-x:auto;padding:5px}
+ .mobile-nav button{flex:1;min-width:66px;border:0;background:white;padding:9px 4px;font-size:11px;color:#637087}
+ .mobile-nav button.active{color:var(--blue);font-weight:700}
+ .form-grid{grid-template-columns:1fr}.full{grid-column:auto}
+ .search{max-width:100%;width:100%}.heading{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">MORENICE<small>SUPPLY CHAIN CRM</small></div>
+  <div class="nav" id="sideNav"></div>
+  <div class="side-note">个人测试版<br>数据保存在当前浏览器<br>请勿录入真实商业机密</div>
+</aside>
+<main>
+<header class="topbar">
+  <strong id="topTitle">工作台 Dashboard</strong>
+  <span class="muted">Morenice · CRM Test</span>
+</header>
+<div class="content" id="content"></div>
+<footer>Morenice Supply Chain Management Co., Ltd. · Private Test Workspace</footer>
+</main>
+</div>
+<nav class="mobile-nav" id="mobileNav"></nav>
+<dialog id="modal">
+  <form id="editForm">
+    <div class="modal-head"><strong id="modalTitle">新增记录</strong><button type="button" class="btn small" onclick="closeModal()">关闭</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">保存记录</button></div>
+  </form>
+</dialog>
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const STORE = "morenice_crm_test_v1";
+const navItems = [
+ ["dashboard","工作台","Dashboard"],
+ ["leads","客户询盘","Leads"],
+ ["followups","跟进提醒","Follow-ups"],
+ ["quotes","物流报价","Quotes"],
+ ["orders","订单利润","Orders"],
+ ["email","邮件助手","Email Assistant"],
+ ["settings","数据管理","Data"]
+];
+const emptyDB = () => ({leads:[],followups:[],quotes:[],orders:[]});
+let db;
+try {
+ db = JSON.parse(localStorage.getItem(STORE)) || emptyDB();
+} catch(e) {
+ db = emptyDB();
+}
+let page = "dashboard";
+let editContext = null;
+
+function save(){
+ try{
+  localStorage.setItem(STORE,JSON.stringify(db));
+  return true;
+ }catch(e){
+  alert("保存失败：浏览器存储空间可能不足，请先导出数据。");
+  return false;
+ }
+}
+function esc(v){
+ return String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function money(n,currency="USD"){
+ return new Intl.NumberFormat("en-US",{style:"currency",currency:currency,maximumFractionDigits:2}).format(Number(n)||0);
+}
+function dateToday(){
+ return new Date().toISOString().slice(0,10);
+}
+function nav(){
+ const html=navItems.map(([id,cn,en])=>`<button class="${page===id?"active":""}" onclick="go('${id}')">${cn}</button>`).join("");
+ $("sideNav").innerHTML=html;
+ $("mobileNav").innerHTML=navItems.filter(x=>x[0]!=="settings").map(([id,cn])=>`<button class="${page===id?"active":""}" onclick="go('${id}')">${cn}</button>`).join("");
+ $("topTitle").textContent=navItems.find(x=>x[0]===page)?.[1]||"工作台";
+}
+function go(id){page=id;nav();render();window.scrollTo(0,0)}
+function heading(title,desc,button=""){
+ return `<div class="heading"><div><h1>${title}</h1><div class="muted">${desc}</div></div>${button}</div>`;
+}
+function stat(title,value,desc){
+ return `<div class="stat"><div class="stat-label">${title}</div><div class="stat-value">${value}</div><div class="muted">${desc}</div></div>`;
+}
+function panel(title,body,extra=""){
+ return `<section class="panel"><div class="panel-head"><h2>${title}</h2>${extra}</div>${body}</section>`;
+}
+function btnAdd(type,label){
+ return `<button class="btn primary" onclick="openEditor('${type}')">+ ${label}</button>`;
+}
+function table(headers,rows){
+ return `<div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows||`<tr><td colspan="${headers.length}" class="empty">暂无记录，点击新增开始使用</td></tr>`}</tbody></table></div>`;
+}
+function actionButtons(type,id){
+ return `<div class="actions"><button class="btn small" onclick="openEditor('${type}','${id}')">编辑</button><button class="btn small danger" onclick="removeRecord('${type}','${id}')">删除</button></div>`;
+}
+function filterBar(type,placeholder){
+ return `<input class="search" placeholder="${placeholder}" oninput="filterTable('${type}',this.value)">`;
+}
+function filterTable(type,value){
+ document.querySelectorAll(`[data-type="${type}"]`).forEach(row=>{
+  row.classList.toggle("hidden",!row.dataset.search.includes(value.toLowerCase()));
+ });
+}
+function render(){
+ nav();
+ const el=$("content");
+ if(page==="dashboard") el.innerHTML=dashboard();
+ else if(page==="leads") el.innerHTML=leadsPage();
+ else if(page==="followups") el.innerHTML=followupsPage();
+ else if(page==="quotes") el.innerHTML=quotesPage();
+ else if(page==="orders") el.innerHTML=ordersPage();
+ else if(page==="email") el.innerHTML=emailPage();
+ else if(page==="settings") el.innerHTML=settingsPage();
+}
+
+function dashboard(){
+ const active=db.leads.filter(x=>x.status!=="已成交"&&x.status!=="已关闭").length;
+ const pending=db.followups.filter(x=>x.status!=="已完成").length;
+ const revenue=db.orders.reduce((s,x)=>s+(+x.revenue||0),0);
+ const profit=db.orders.reduce((s,x)=>s+(+x.revenue||0)-(+x.cost||0),0);
+ const today=db.followups.filter(x=>x.status!=="已完成"&&x.date&&x.date<=dateToday());
+ const latest=db.leads.slice(-5).reverse();
+ return heading("工作台 Dashboard","欢迎使用 Morenice CRM 个人测试版")
+ +`<div class="stats">${stat("客户总数",db.leads.length,"全部客户档案")}${stat("跟进中询盘",active,"尚未成交或关闭")}${stat("待处理跟进",pending,"所有未完成事项")}${stat("累计订单毛利",money(profit),"订单收入减去成本")}</div>`
+ +panel("今日及逾期跟进",today.length?table(["客户","跟进内容","计划日期","状态"],today.map(x=>`<tr><td>${esc(x.customer)}</td><td>${esc(x.note)}</td><td>${esc(x.date)}</td><td><span class="badge orange">${esc(x.status)}</span></td></tr>`)):`<div class="empty">暂无今日或逾期跟进</div>`)
+ +`<div class="two-col">${panel("最近客户询盘",latest.length?table(["客户","国家","状态"],latest.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.country)}</td><td>${esc(x.status)}</td></tr>`)):`<div class="empty">还没有客户，添加第一条询盘吧。</div>`)}${panel("业务概览",`<p>订单收入：<strong>${money(revenue)}</strong></p><p>订单毛利：<strong>${money(profit)}</strong></p><p>客户询盘：<strong>${db.leads.length}</strong></p><p>物流报价：<strong>${db.quotes.length}</strong></p><div class="note">建议每天查看待跟进事项，及时更新客户状态、报价和订单成本。</div>`)}</div>`;
+}
+function leadsPage(){
+ const rows=db.leads.map(x=>`<tr data-type="leads" data-search="${esc([x.name,x.company,x.country,x.email,x.product,x.status].join(" ").toLowerCase())}"><td><strong>${esc(x.name)}</strong><br>${esc(x.company)}</td><td>${esc(x.country)}<br>${esc(x.email)}</td><td>${esc(x.product)}</td><td>${esc(x.route)}</td><td><span class="badge">${esc(x.status)}</span></td><td>${esc(x.nextDate||"未设置")}</td><td>${actionButtons("leads",x.id)}</td></tr>`).join("");
+ return heading("客户询盘","管理客户资料、物流需求和销售机会",btnAdd("leads","新增客户"))
+ +panel("客户档案",filterBar("leads","搜索客户、公司、国家、货物...")+table(["客户 / 公司","国家 / 邮箱","货物需求","运输路线","状态","下次跟进","操作"],rows));
+}
+function followupsPage(){
+ const rows=db.followups.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(x=>`<tr data-type="followups" data-search="${esc([x.customer,x.note,x.status].join(" ").toLowerCase())}"><td>${esc(x.customer)}</td><td>${esc(x.note)}</td><td>${esc(x.date)}</td><td><span class="badge ${x.status==="已完成"?"green":"orange"}">${esc(x.status)}</span></td><td><div class="actions"><button class="btn small" onclick="completeFollowup('${x.id}')">标记完成</button>${actionButtons("followups",x.id)}</div></td></tr>`).join("");
+ return heading("跟进提醒","记录邮件、WhatsApp、电话和下一次联系时间",btnAdd("followups","新增跟进"))
+ +panel("跟进任务",filterBar("followups","搜索客户或跟进内容...")+table(["客户","跟进内容","计划日期","状态","操作"],rows));
+}
+function quotesPage(){
+ const rows=db.quotes.map(x=>`<tr data-type="quotes" data-search="${esc([x.customer,x.route,x.method,x.status].join(" ").toLowerCase())}"><td>${esc(x.customer)}</td><td>${esc(x.route)}</td><td>${esc(x.method)}</td><td>${money(x.amount,x.currency)}</td><td>${esc(x.valid||"未填写")}</td><td>${esc(x.status)}</td><td>${actionButtons("quotes",x.id)}</td></tr>`).join("");
+ return heading("物流报价","记录运输方案、成本参考和客户报价",btnAdd("quotes","新增报价"))
+ +panel("报价记录",filterBar("quotes","搜索客户、路线或运输方式...")+table(["客户","运输路线","运输方式","报价金额","有效期","状态","操作"],rows));
+}
+function ordersPage(){
+ const revenue=db.orders.reduce((s,x)=>s+(+x.revenue||0),0);
+ const cost=db.orders.reduce((s,x)=>s+(+x.cost||0),0);
+ const profit=revenue-cost;
+ const rows=db.orders.map(x=>{
+  const p=(+x.revenue||0)-(+x.cost||0);
+  const margin=(+x.revenue||0)?(p/(+x.revenue||1)*100):0;
+  return `<tr data-type="orders" data-search="${esc([x.customer,x.route,x.status].join(" ").toLowerCase())}"><td>${esc(x.customer)}</td><td>${esc(x.route)}</td><td>${money(x.revenue,x.currency)}</td><td>${money(x.cost,x.currency)}</td><td><strong>${money(p,x.currency)}</strong></td><td>${margin.toFixed(1)}%</td><td>${esc(x.status)}</td><td>${actionButtons("orders",x.id)}</td></tr>`;
+ }).join("");
+ return heading("订单利润分析","录入订单收入与成本，自动核算毛利",btnAdd("orders","新增订单"))
+ +`<div class="stats">${stat("订单数量",db.orders.length,"全部订单")}${stat("总收入",money(revenue),"按订单币种汇总，仅适用于币种一致的情况")}${stat("总成本",money(cost),"按订单币种汇总")}${stat("毛利",money(profit),"收入减去成本")}</div>`
+ +panel("订单明细",filterBar("orders","搜索客户或路线...")+table(["客户","运输路线","收入","成本","毛利","毛利率","状态","操作"],rows))
+ +`<div class="note">注意：如果订单使用不同币种，请先统一换算为同一币种再比较总收入和总毛利。本测试版不自动换汇，也不包含税务、应收应付或实际财务账簿功能。</div>`;
+}
+function emailPage(){
+ return heading("AI 邮件助手","生成可编辑的英文商务邮件草稿；当前版本使用本地模板，不调用 AI 服务")
+ +`<div class="panel"><form id="emailForm">
+ <div class="form-grid">
+ <div class="field"><label>客户姓名</label><input name="customer" placeholder="例如 Maria"></div>
+ <div class="field"><label>邮件场景</label><select name="scenario"><option value="inquiry">回复新询盘</option><option value="quote">发送物流报价</option><option value="followup">跟进客户</option><option value="shipment">更新运输进度</option><option value="documents">确认文件资料</option></select></div>
+ <div class="field full"><label>货物 / 路线 / 关键信息</label><textarea name="details" placeholder="例如：6家供应商货物已收齐，正在集货，预计后天装柜。"></textarea></div>
+ <div class="field full"><label>语气</label><select name="tone"><option value="professional">专业、简洁</option><option value="friendly">友好自然</option><option value="firm">礼貌但坚定</option></select></div>
+ </div><button class="btn primary" type="submit">生成邮件草稿</button>
+ </form></div>
+ <div class="panel"><div class="panel-head"><h2>邮件草稿</h2><button class="btn" onclick="copyDraft()">复制邮件</button></div><textarea id="emailOutput" style="min-height:260px" placeholder="生成的邮件会显示在这里，你可以继续编辑。"></textarea><div class="muted">发送前请核对客户姓名、价格、日期、船期和运输条款。</div></div>`;
+}
+function settingsPage(){
+ return heading("数据管理","备份、恢复或清空当前浏览器中的测试数据")
+ +panel("数据备份",`<p>建议在更换手机、清理浏览器数据或修改代码前导出备份。</p><div class="actions"><button class="btn primary" onclick="exportData()">导出 JSON 备份</button><button class="btn" onclick="exportCSV()">导出客户 CSV</button><button class="btn" onclick="$('importFile').click()">导入 JSON 备份</button><input id="importFile" class="hidden" type="file" accept=".json,application/json" onchange="importData(event)"></div>`)
+ +panel("数据状态",`<p>客户：${db.leads.length} 条</p><p>跟进：${db.followups.length} 条</p><p>报价：${db.quotes.length} 条</p><p>订单：${db.orders.length} 条</p><div class="note">这些数据保存在当前浏览器的 localStorage 中。GitHub Pages 不会自动同步不同设备之间的数据。</div><button class="btn danger" onclick="clearData()">清空所有测试数据</button>`);
+}
+
+const schemas={
+ leads:{title:"客户询盘",fields:[
+  ["name","客户姓名","text",true],["company","公司名称","text"],["country","国家 / 地区","text"],["email","邮箱","email"],["phone","WhatsApp / 电话","text"],["product","货物类型","text"],["route","运输路线","text"],["method","运输方式 / 条款","text"],["volume","体积 CBM","number"],["status","询盘状态","select",true,["新询盘","已联系","报价中","等待回复","已成交","已关闭"]],["nextDate","下次跟进日期","date"],["notes","需求与备注","textarea"]
+ ]},
+ followups:{title:"跟进任务",fields:[
+  ["customer","客户姓名 / 公司","text",true],["date","计划跟进日期","date",true],["note","跟进内容","textarea",true],["status","任务状态","select",true,["待跟进","已完成","已取消"]]
+ ]},
+ quotes:{title:"物流报价",fields:[
+  ["customer","客户姓名 / 公司","text",true],["route","运输路线","text",true],["method","运输方式 / 条款","text"],["amount","客户报价金额","number",true],["currency","币种","select",true,["USD","EUR","CNY","GBP","CHF"]],["valid","报价有效期","date"],["status","报价状态","select",true,["草稿","已发送","待确认","已接受","已失效"]],["notes","费用构成 / 备注","textarea"]
+ ]},
+ orders:{title:"订单利润",fields:[
+  ["customer","客户姓名 / 公司","text",true],["route","运输路线","text"],["revenue","订单收入","number",true],["cost","订单总成本","number",true],["currency","币种","select",true,["USD","EUR","CNY","GBP","CHF"]],["status","订单状态","select",true,["待出运","运输中","已完成","已取消"]],["notes","订单备注","textarea"]
+ ]}
+};
+function openEditor(type,id){
+ const schema=schemas[type];
+ if(!schema)return;
+ const existing=id?db[type].find(x=>x.id===id):null;
+ editContext={type,id:id||null};
+ $("modalTitle").textContent=(existing?"编辑":"新增")+schema.title;
+ $("modalBody").innerHTML=schema.fields.map(([key,label,kind,required,options])=>{
+  const value=existing?.[key]??(key==="status"?({"leads":"新询盘","followups":"待跟进","quotes":"草稿","orders":"待出运"}[type]):key==="currency"?"USD":"");
+  let control="";
+  if(kind==="select"){
+   control=`<select name="${key}" ${required?"required":""}>${options.map(o=>`<option ${value===o?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
+  }else if(kind==="textarea"){
+   control=`<textarea name="${key}" ${required?"required":""}>${esc(value)}</textarea>`;
+  }else{
+   control=`<input name="${key}" type="${kind}" value="${esc(value)}" ${required?"required":""} ${kind==="number"?'min="0" step="any"':""}>`;
+  }
+  return `<div class="field ${kind==="textarea"?"full":""}"><label>${label}${required?" *":""}</label>${control}</div>`;
+ }).join("");
+ $("modal").showModal();
+}
+function closeModal(){$("modal").close();editContext=null}
+$("editForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ if(!editContext)return;
+ const {type,id}=editContext;
+ const data=Object.fromEntries(new FormData(e.currentTarget).entries());
+ if(type==="orders"||type==="quotes"||type==="leads") {
+  if(data.amount!==undefined)data.amount=Number(data.amount)||0;
+  if(data.revenue!==undefined)data.revenue=Number(data.revenue)||0;
+  if(data.cost!==undefined)data.cost=Number(data.cost)||0;
+  if(data.volume!==undefined)data.volume=Number(data.volume)||0;
+ }
+ if(id){
+  const i=db[type].findIndex(x=>x.id===id);
+  if(i>=0)db[type][i]={...db[type][i],...data};
+ }else{
+  data.id=crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random();
+  db[type].push(data);
+ }
+ if(save()){
+  closeModal();
+  render();
+ }
+});
+function removeRecord(type,id){
+ if(!confirm("确定删除这条记录？此操作不可撤销。"))return;
+ db[type]=db[type].filter(x=>x.id!==id);
+ save();render();
+}
+function completeFollowup(id){
+ const x=db.followups.find(x=>x.id===id);
+ if(x){x.status="已完成";save();render()}
+}
+function copyDraft(){
+ const value=$("emailOutput").value;
+ if(!value.trim()){alert("请先生成或填写邮件草稿。");return}
+ if(navigator.clipboard&&window.isSecureContext){
+  navigator.clipboard.writeText(value).then(()=>alert("已复制邮件草稿")).catch(()=>fallbackCopy(value));
+ }else fallbackCopy(value);
+}
+function fallbackCopy(value){
+ const t=document.createElement("textarea");t.value=value;document.body.appendChild(t);t.select();
+ try{document.execCommand("copy");alert("复制操作已执行")}catch(e){alert("复制失败，请长按文本手动复制")}
+ t.remove();
+}
+document.addEventListener("submit",e=>{
+ if(e.target.id!=="emailForm")return;
+ e.preventDefault();
+ const d=Object.fromEntries(new FormData(e.target).entries());
+ const name=d.customer.trim()||"there";
+ const details=d.details.trim()||"the shipment requirements";
+ const opening=d.tone==="friendly"?"I hope you are doing well!":d.tone==="firm"?"I hope you are well.":"I hope this email finds you well.";
+ const endings=d.tone==="firm"?"Please confirm the next steps at your earliest convenience.":"Please let me know if you have any questions.";
+ const texts={
+ inquiry:`Subject: Re: Your Logistics Inquiry\n\nHi ${name},\n\n${opening}\n\nThank you for contacting Morenice Supply Chain Management Co., Ltd. We can assist with supplier collection, warehouse consolidation, export arrangements and international shipping solutions tailored to your requirements.\n\nRegarding your inquiry, ${details}.\n\n${endings}\n\nBest regards,\nMorenice Supply Chain Team`,
+ quote:`Subject: Logistics Quotation\n\nHi ${name},\n\n${opening}\n\nPlease find our proposed shipping details below:\n\n${details}\n\nThe final cost is subject to confirmation of the cargo details, shipping schedule and applicable charges.\n\n${endings}\n\nBest regards,\nMorenice Supply Chain Team`,
+ followup:`Subject: Following Up\n\nHi ${name},\n\n${opening}\n\nI am following up regarding ${details}.\n\nPlease let me know if there are any updates or if you need further information from our side.\n\nThank you, and I look forward to hearing from you.\n\nBest regards,\nMorenice Supply Chain Team`,
+ shipment:`Subject: Shipment Update\n\nHi ${name},\n\n${opening}\n\nHere is the latest shipment update:\n\n${details}\n\nWe will continue monitoring the shipment and keep you informed of further progress.\n\nBest regards,\nMorenice Supply Chain Team`,
+ documents:`Subject: Confirmation of Shipping Documents\n\nHi ${name},\n\n${opening}\n\nTo proceed with the shipping arrangements, could you please confirm the following details?\n\n${details}\n\nPlease share any available product specifications, MSDS or relevant test reports where applicable.\n\nThank you for your cooperation.\n\nBest regards,\nMorenice Supply Chain Team`
+ };
+ $("emailOutput").value=texts[d.scenario];
+});
+
+function downloadFile(name,content,type){
+ const blob=new Blob([content],{type});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");a.href=url;a.download=name;a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function exportData(){
+ downloadFile("morenice-crm-backup.json",JSON.stringify(db,null,2),"application/json");
+}
+function csvCell(v){return '"'+String(v??"").replace(/"/g,'""')+'"'}
+function exportCSV(){
+ const fields=["name","company","country","email","phone","product","route","method","volume","status","nextDate","notes"];
+ const csv=[fields.join(","),...db.leads.map(x=>fields.map(k=>csvCell(x[k])).join(","))].join("\r\n");
+ downloadFile("morenice-customers.csv","\ufeff"+csv,"text/csv;charset=utf-8");
+}
+function importData(event){
+ const file=event.target.files?.[0];
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const obj=JSON.parse(reader.result);
+   if(!obj||!["leads","followups","quotes","orders"].every(k=>Array.isArray(obj[k])))throw Error("格式不正确");
+   if(!confirm("导入将替换当前所有数据，建议先导出备份。继续吗？"))return;
+   db=obj;
+   if(save()){render();alert("数据导入成功")}
+  }catch(e){alert("导入失败：文件格式不正确。")}
+  event.target.value="";
+ };
+ reader.readAsText(file);
+}
+function clearData(){
+ if(!confirm("确定清空全部客户、跟进、报价和订单数据吗？"))return;
+ if(!confirm("请再次确认。建议先导出 JSON 备份。"))return;
+ db=emptyDB();save();render();
+}
+render();
+</script>
+</body>
+</html>
